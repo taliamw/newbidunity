@@ -1,0 +1,24 @@
+{
+    "amatic sc": {
+        "normal": "C:\\xampp\\htdocs\\IAP-project\\storage\\fonts\/amatic_sc_normal_10386612e2805fe2439f007c9d6b8c38",
+        "bold": "amatic_sc_bold_2af7a6dc6daf00f2c299f98e9e410491"
+    },
+    "inter": {
+        "300": "C:\\xampp\\htdocs\\IAP-project\\storage\\fonts\/inter_300_ffc5f81dee6c59552a98700cb9ce21c6",
+        "normal": "C:\\xampp\\htdocs\\IAP-project\\storage\\fonts\/inter_normal_3ba32a48b7860dfb008d0b1457da683a",
+        "500": "C:\\xampp\\htdocs\\IAP-project\\storage\\fonts\/inter_500_5227956572435006df168ae4e07c5148",
+        "600": "C:\\xampp\\htdocs\\IAP-project\\storage\\fonts\/inter_600_d0d96b12edf8a78fd85c552d12762fb0",
+        "bold": "inter_bold_868976cd8a549429e4b1d38e6b1b6bed"
+    },
+    "open sans": {
+        "300_italic": "C:\\xampp\\htdocs\\IAP-project\\storage\\fonts\/open_sans_300_italic_54c67a410fca3ed6a82c331ec0184ef9",
+        "italic": "C:\\xampp\\htdocs\\IAP-project\\storage\\fonts\/open_sans_italic_67bdd4a47b171988efc0a4ba996a68e0",
+        "600_italic": "C:\\xampp\\htdocs\\IAP-project\\storage\\fonts\/open_sans_600_italic_f5747ccad255983b07ed115de01d13ca",
+        "bold_italic": "C:\\xampp\\htdocs\\IAP-project\\storage\\fonts\/open_sans_bold_italic_762aac4dcb9c01f1ca640da86dd8d4ad",
+        "300": "C:\\xampp\\htdocs\\IAP-project\\storage\\fonts\/open_sans_300_0885c5810a008bcb7c54e9d1bf54fb2c",
+        "normal": "C:\\xampp\\htdocs\\IAP-project\\storage\\fonts\/open_sans_normal_f9f1b653d87c168097eaa958ffde3cdf",
+        "500": "C:\\xampp\\htdocs\\IAP-project\\storage\\fonts\/open_sans_500_156d0d04fc7a69e4e8a9aa6623bea99e",
+        "600": "C:\\xampp\\htdocs\\IAP-project\\storage\\fonts\/open_sans_600_9542d9fe5ed8edbce0c8641c6025458b",
+        "bold": "open_sans_bold_9f0e3c1c8c0fab5db8d6ce31e4104d18"
+    }
+}
