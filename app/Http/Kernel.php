@@ -65,3 +65,9 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
     ];
 }
+protected $middlewareGroups = [
+    'web' => [
+        // Other middleware...
+        \App\Http\Middleware\ScreenLock::class,
+    ],
+];

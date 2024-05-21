@@ -63,3 +63,41 @@ Route::get('/chartjs-page', [UserController::class, 'loadChartJsPage'])->name('c
 Route::get('/generate-pdf', [PDFController::class, 'generatePDF'])->name('generate.pdf');
 Route::get('/report/user-report', [PDFController::class, 'downloadUserReport'])->name('report.user-report');
 Route::get('/export-table-pdf', [PDFController::class, 'exportTableToPDF'])->name('export.table.pdf');
+use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
+
+Route::get('/lock-screen', function () {
+    return view('auth.lock-screen');
+})->name('lock-screen');
+
+Route::post('/unlock-screen', function (Request $request) {
+    $request->validate([
+        'password' => 'required|password',
+    ]);
+    session(['screen_locked' => false]);
+    return redirect()->intended('/');
+})->name('unlock-screen');
+Route::post('/lock-screen', function () {
+    session(['screen_locked' => true]);
+    return response()->json(['status' => 'locked']);
+});
+Route::middleware(['auth'])->group(function () {
+    Route::get('/lock-screen', function () {
+        return view('auth.lock-screen');
+    })->name('lock-screen');
+
+    Route::post('/unlock-screen', function (Request $request) {
+        $request->validate([
+            'password' => 'required',
+        ]);
+
+        $user = Auth::user();
+
+        if (Hash::check($request->password, $user->password)) {
+            session(['screen_locked' => false]);
+            return redirect()->intended('/');
+        } else {
+            return back()->withErrors(['password' => 'The provided password is incorrect.']);
+        }
+    })->name('unlock-screen');
+});
