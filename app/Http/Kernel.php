@@ -36,12 +36,7 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
-        ],
-
-        'api' => [
-            // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
-            'throttle:api',
-            \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \App\Http\Middleware\ScreenLock::class, // Add ScreenLock middleware
         ],
     ];
 
@@ -63,15 +58,6 @@ class Kernel extends HttpKernel
         'signed' => \App\Http\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+        'check.session' => \App\Http\Middleware\CheckSession::class, // Add CheckSession middleware
     ];
 }
-protected $middlewareGroups = [
-    'web' => [
-        // Other middleware...
-        \App\Http\Middleware\ScreenLock::class,
-    ],
-];
-protected $routeMiddleware = [
-    // ...
-    'check.session' => \App\Http\Middleware\CheckSession::class,
-];
