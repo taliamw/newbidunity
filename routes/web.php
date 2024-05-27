@@ -1,13 +1,9 @@
 <?php
-namespace App\Http\Controllers;
+
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\RecipeController;
-use App\Http\Controllers\JokeController;
-use App\Http\Controllers\viewusersController;
 use App\Http\Controllers\PDFController;
 use App\Http\Controllers\SessionController;
-use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
