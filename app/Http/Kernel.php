@@ -71,3 +71,7 @@ protected $middlewareGroups = [
         \App\Http\Middleware\ScreenLock::class,
     ],
 ];
+protected $routeMiddleware = [
+    // ...
+    'check.session' => \App\Http\Middleware\CheckSession::class,
+];
