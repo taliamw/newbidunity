@@ -66,6 +66,7 @@
                         
                         <a class="btn-book-a-table" href="{{ url('/admin') }}" class="text-sm text-gray-700 underline">Admin Home</a>
 
+                        <a class="btn-book-a-table" href="{{ url('/lock-screen') }}" class="text-sm text-gray-700 underline">Lock your screen</a>
                     @else
                         <a class="btn-book-a-table" href="{{ route('login') }}" class="text-sm text-gray-700 underline">Log in</a>
 

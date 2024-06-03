@@ -20,6 +20,8 @@
                 <x-label for="password" value="{{ __('Password') }}" />
                 <x-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" />
             </div>
+            <p class="text-xs text-gray-500 mt-1">Your password should be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character.</p>
+
 
             <div class="mt-4">
                 <x-label for="password_confirmation" value="{{ __('Confirm Password') }}" />
