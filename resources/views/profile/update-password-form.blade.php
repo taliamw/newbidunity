@@ -19,6 +19,9 @@
             <x-input id="password" type="password" class="mt-1 block w-full" wire:model.defer="state.password" autocomplete="new-password" />
             <x-input-error for="password" class="mt-2" />
         </div>
+        <div class="col-span-6 sm:col-span-4">
+        <p class="text-xs text-gray-500 mt-1">Remember! Your password should be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character.</p>
+        </div>
 
         <div class="col-span-6 sm:col-span-4">
             <x-label for="password_confirmation" value="{{ __('Confirm Password') }}" />
