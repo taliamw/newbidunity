@@ -16,6 +16,12 @@ use App\Http\Controllers\AuthController;
 |
 */
 
+// Routes for unlocking the screen and logging out
+Route::middleware(['auth'])->group(function () {
+    Route::post('/unlock-screen', [AuthController::class, 'unlockScreen'])->name('unlock-screen');
+    Route::get('/lockscreen', [AuthController::class, 'lockScreen'])->name('lock-screen');
+    Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+});
 
 Route::get('/', function () {
     return view('home');
@@ -49,18 +55,18 @@ Route::middleware([
 });
 
 
-Route::get('/lock-screen', function () {
-    return view('auth.lock-screen');
-})->name('lock-screen');
+// Route::get('/lock-screen', function () {
+//     return view('auth.lock-screen');
+// })->name('lock-screen');
 
-Route::post('/lock-screen', function () {
-    session(['screen_locked' => true]);
-    return response()->json(['status' => 'locked']);
-});
+// Route::post('/lock-screen', function () {
+//     session(['screen_locked' => true]);
+//     return response()->json(['status' => 'locked']);
+// });
 
-Route::post('/unlock-screen', [AuthController::class, 'unlockScreen'])->name('unlock-screen');
-Route::get('/lockscreen', [AuthController::class, 'lockScreen'])->name('lock-screen');
-Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+// Route::post('/unlock-screen', [AuthController::class, 'unlockScreen'])->name('unlock-screen');
+// Route::get('/lockscreen', [AuthController::class, 'lockScreen'])->name('lock-screen');
+// Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
 
 Route::get('/viewusers', [UserController::class, 'viewUsers'])->name('viewusers');
@@ -76,12 +82,6 @@ Route::get('/generate-pdf', [PDFController::class, 'generatePDF'])->name('genera
 Route::get('/report/user-report', [PDFController::class, 'downloadUserReport'])->name('report.user-report');
 Route::get('/export-table-pdf', [PDFController::class, 'exportTableToPDF'])->name('export.table.pdf');
 
-// Routes for unlocking the screen and logging out
-Route::middleware(['auth'])->group(function () {
-    Route::post('/unlock-screen', [AuthController::class, 'unlockScreen'])->name('unlock-screen');
-    Route::get('/lockscreen', [AuthController::class, 'lockScreen'])->name('lock-screen');
-    Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
-});
 
 // Routes that need authentication and lock check
 Route::middleware(['auth', 'check.locked'])->group(function () {
