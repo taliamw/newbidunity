@@ -25,18 +25,9 @@
             </div>
             <p class="text-xs text-gray-500 mt-1">Your password should be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, one number, and one special character.</p>
 
-
             <div class="mt-4">
                 <x-label for="password_confirmation" value="{{ __('Confirm Password') }}" />
                 <x-input id="password_confirmation" class="block mt-1 w-full" type="password" name="password_confirmation" required autocomplete="new-password" />
-            </div>
-
-            <div class="mt-4">
-                <x-label for="role" value="{{ __('Role') }}" />
-                <select name="role" id="role" class="block mt-1 w-full" required>
-                    <option value="user">User</option>
-                    <option value="admin">Admin</option>
-                </select>
             </div>
 
             @if (Laravel\Jetstream\Jetstream::hasTermsAndPrivacyPolicyFeature())
