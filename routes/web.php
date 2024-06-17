@@ -5,6 +5,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PDFController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\PaymentDetailsController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -88,4 +89,9 @@ Route::middleware(['auth', 'check.locked'])->group(function () {
     Route::get('/dashboard', function () {
         return view('dashboard'); // Adjust as needed
     })->name('dashboard');
+});
+
+Route::middleware(['auth'])->group(function () {
+    Route::get('/payment-details', [PaymentDetailsController::class, 'edit'])->name('payment-details.edit');
+    Route::put('/payment-details', [PaymentDetailsController::class, 'update'])->name('payment-details.update');
 });

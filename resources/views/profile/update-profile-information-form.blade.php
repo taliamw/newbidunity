@@ -81,6 +81,20 @@
                 @endif
             @endif
         </div>
+
+       <!-- Payment Details Section -->
+       <div class="col-span-6 sm:col-span-4">
+                <h2 class="text-lg font-semibold">{{ __('Payment Details') }}</h2>
+
+                @if (auth()->user()->card_brand && auth()->user()->card_last4)
+                    <p><strong>{{ __('Card Brand') }}:</strong> {{ auth()->user()->card_brand }}</p>
+                    <p><strong>{{ __('Card Number') }}:</strong> ****{{ auth()->user()->card_last4 }}</p><br>
+                    <a href="{{ route('payment-details.edit') }}" class="text-blue-500 hover:underline">{{ __('Edit Payment Details') }}</a>
+                @else
+                    <p>{{ __('No payment details on file.') }}</p><br>
+                    <a href="{{ route('payment-details.edit') }}" class="text-blue-500 hover:underline">{{ __('Add Payment Details') }}</a>
+                @endif
+            </div>
     </x-slot>
 
     <x-slot name="actions">
@@ -92,4 +106,4 @@
             {{ __('Save') }}
         </x-button>
     </x-slot>
-</x-form-section>
+    </x-form-section>
