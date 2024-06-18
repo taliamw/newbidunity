@@ -6,7 +6,7 @@
 
         <x-validation-errors class="mb-4" />
 
-        <form method="POST" action="{{ route('register') }}">
+        <form id="registration-form" method="POST" action="{{ route('register') }}">
             @csrf
 
             <div>
@@ -48,14 +48,33 @@
             @endif
 
             <div class="flex items-center justify-end mt-4">
-                <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
-                    {{ __('Already registered?') }}
-                </a>
-
                 <x-button class="ml-4">
                     {{ __('Register') }}
                 </x-button>
             </div>
         </form>
+
+        <div class="flex items-center justify-center mt-4">
+            <p class="text-sm text-gray-600">Already registered? Redirecting to login page...</p>
+        </div>
     </x-authentication-card>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const registrationForm = document.getElementById('registration-form');
+            registrationForm.addEventListener('submit', function (event) {
+                event.preventDefault();
+                // Submit the form using AJAX
+                fetch(this.action, {
+                    method: 'POST',
+                    body: new FormData(this)
+                })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.href = '{{ route("login") }}';
+                    }
+                });
+            });
+        });
+    </script>
 </x-guest-layout>
