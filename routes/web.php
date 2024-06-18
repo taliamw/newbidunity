@@ -32,17 +32,11 @@ Route::get('/home', function () {
     return view('home');
 })->name('home');
 
-Route::get('/sign_in', function () {
-    return view('sign_in');
-})->name('sign_in');
+
 
 Route::get('/signup', function () {
     return view('signup');
 })->name('signup');
-
-
-
-Route::get('/admin', [UserController::class, 'index']);
 
 
 Route::middleware([
@@ -54,6 +48,12 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
 });
+
+Route::get('/email/verify', function () {
+    return view('auth.verify-email');
+})->middleware(['auth'])->name('verification.notice');
+
+Route::get('/admin', [UserController::class, 'index']);
 
 
 // Route::get('/lock-screen', function () {
@@ -84,14 +84,17 @@ Route::get('/report/user-report', [PDFController::class, 'downloadUserReport'])-
 Route::get('/export-table-pdf', [PDFController::class, 'exportTableToPDF'])->name('export.table.pdf');
 
 
-// Routes that need authentication and lock check
-Route::middleware(['auth', 'check.locked'])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard'); // Adjust as needed
-    })->name('dashboard');
-});
+// // Routes that need authentication and lock check
+// Route::middleware(['auth', 'check.locked'])->group(function () {
+//     Route::get('/dashboard', function () {
+//         return view('dashboard'); // Adjust as needed
+//     })->name('dashboard');
+// });
 
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/sign_in', function () {
+        return view('sign_in');
+    })->name('sign_in');
     Route::get('/payment-details', [PaymentDetailsController::class, 'edit'])->name('payment-details.edit');
     Route::put('/payment-details', [PaymentDetailsController::class, 'update'])->name('payment-details.update');
 });
