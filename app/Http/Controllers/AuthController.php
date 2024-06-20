@@ -8,18 +8,7 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    public function lockScreen()
-    {
-        if (!Auth::check()) {
-            return redirect()->route('login');
-        }
-
-        // Set session variable to mark the session as locked
-        session(['locked' => true]);
-
-        return redirect()->route('lock-screen');
-    }
-
+    
     public function unlockScreen(Request $request)
     {
         $request->validate([
@@ -34,9 +23,9 @@ class AuthController extends Controller
 
         if (Hash::check($request->password, $user->password)) {
             // Password is correct, unlock the screen
-            session(['locked' => false]);
+            session(['screen_locked' => false]);
 
-            return redirect()->route('home'); // Redirect to the desired route
+            return  redirect()->route('home'); // Redirect to the desired route
         } else {
             // Password is incorrect, return back with error
             return back()->withErrors(['password' => 'Invalid password']);
@@ -46,7 +35,6 @@ class AuthController extends Controller
     public function logout()
     {
         Auth::logout();
-        session()->flush();
         return redirect()->route('login');
     }
 }

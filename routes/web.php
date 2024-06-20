@@ -17,13 +17,6 @@ use App\Http\Controllers\PaymentDetailsController;
 |
 */
 
-// Routes for unlocking the screen and logging out
-Route::middleware(['auth'])->group(function () {
-    Route::post('/unlock-screen', [AuthController::class, 'unlockScreen'])->name('unlock-screen');
-    Route::get('/lockscreen', [AuthController::class, 'lockScreen'])->name('lock-screen');
-    Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
-});
-
 Route::get('/', function () {
     return view('home');
 })->name('home');
@@ -38,16 +31,17 @@ Route::get('/signup', function () {
     return view('signup');
 })->name('signup');
 
+// Route::middleware(['screen_locked'])->group(function () {
+//     Route::get('/dashboard', function () {
+//         return view('dashboard');
+//     })->name('dashboard');    // Add other routes that need to be protected
+// });
 
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified'
-])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
-});
+// Route::middleware(['auth:sanctum', config('jetstream.auth_session'),'verified'])->group(function () {
+//     Route::get('/dashboard', function () {
+//         return view('dashboard');
+//     })->name('dashboard');
+// });
 
 Route::get('/email/verify', function () {
     return view('auth.verify-email');
@@ -56,22 +50,28 @@ Route::get('/email/verify', function () {
 Route::get('/admin', [UserController::class, 'index']);
 
 
-// Route::get('/lock-screen', function () {
-//     return view('auth.lock-screen');
-// })->name('lock-screen');
+Route::get('/lock-screen', function () {
+    return view('auth.lock-screen');
+})->name('lock-screen');
 
-// Route::post('/lock-screen', function () {
-//     session(['screen_locked' => true]);
-//     return response()->json(['status' => 'locked']);
-// });
+Route::post('/lock-screen', function () {
+    session(['screen_locked' => true]);
+    return response()->json(['status' => 'locked']);
+});
+Route::get('/dashboard', function () {
+    if (session('screen_locked', false)) {
+        return redirect()->route('lock-screen');
+    }
 
-// Route::post('/unlock-screen', [AuthController::class, 'unlockScreen'])->name('unlock-screen');
-// Route::get('/lockscreen', [AuthController::class, 'lockScreen'])->name('lock-screen');
-// Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
+    // Proceed to dashboard if screen is unlocked
+    return view('dashboard');
+})->middleware('auth')->name('dashboard');
+Route::post('/unlock-screen', [AuthController::class, 'unlockScreen'])->name('unlock-screen');
+Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
 
 Route::get('/viewusers', [UserController::class, 'viewUsers'])->name('viewusers');
-//Route::get('/viewusers/create', [UserController::class, 'create'])->name('viewusers.create');
+Route::get('/viewusers/create', [UserController::class, 'create'])->name('viewusers.create');
 Route::post('/viewusers', [UserController::class, 'store'])->name('viewusers.store');
 Route::get('/viewusers/{user}', [UserController::class, 'show'])->name('viewusers.show');
 Route::get('/viewusers/{user}/edit', [UserController::class, 'edit'])->name('viewusers.edit');

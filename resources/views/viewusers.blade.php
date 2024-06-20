@@ -2,43 +2,59 @@
 
 @section('content')
     <!-- ======= Viewusers Section ======= -->
-    <br><br><br><br>
+    <br><br><br><br><br>
     <h1>User Details</h1>
 
     <!-- Create Button -->
 
     <table>
-        <thead>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach ($users as $user)
             <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Role</th>
-                <th>Action</th> <!-- Added column for actions -->
+                <td>{{ $user->name }}</td>
+                <td>{{ $user->email }}</td>
+                <td>{{ $user->role }}</td>
+                <td>
+                    <!-- Edit Button -->
+                    <a href="{{ route('viewusers.edit', $user->id) }}" class="btn btn-primary">Edit</a>
+
+                    <!-- Delete Button -->
+                    <form action="{{ route('viewusers.destroy', $user->id) }}" method="POST" style="display: inline;">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
             </tr>
-        </thead>
-        <tbody>
-            @foreach ($users as $user)
-                <tr>
-                    <td>{{ $user->name }}</td>
-                    <td>{{ $user->email }}</td>
-                    <td>{{ $user->role }}</td>
-                    <td>
+        @endforeach
+    </tbody>
+</table>
 
-                        <!-- Delete Button -->
-                        <form action="{{ route('viewusers.destroy', $user->id) }}" method="POST" style="display: inline;">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-danger">Delete</button>
-                        </form>
-                    </td>
-                </tr>
+<a href="{{ route('export.table.pdf') }}" class="btn btn-primary">Download PDF</a>
 
-            @endforeach
-
-        </tbody>
-
-    </table>
-    <a href="{{ route('export.table.pdf') }}" class="btn btn-primary">Download PDF</a>
-
+<br><br>
+<h2>Create an admin</h2>
+<!-- Create User Form -->
+<form action="{{ route('viewusers.store') }}" method="POST">
+    @csrf
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required>
+    <br><br>
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" required>
+    <br><br>
+    <label for="role">Role:</label>
+    <input type="text" id="role" name="role" required>
+    <br><br>
+    <button type="submit" class="btn btn-success">Create User</button>
+</form>
 
 @endsection
