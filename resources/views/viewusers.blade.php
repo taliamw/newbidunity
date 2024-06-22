@@ -51,10 +51,9 @@
     <label for="email">Email:</label>
     <input type="email" id="email" name="email" required>
     <br><br>
-    <label for="role">Role:</label>
-    <input type="text" id="role" name="role" required>
-    <br><br>
-    <button type="submit" class="btn btn-success">Create User</button>
+    <input type="hidden" name="role" value="admin">
+    <br>
+    <button type="submit" class="btn btn-success">Create Admin</button>
 </form>
 
 @endsection

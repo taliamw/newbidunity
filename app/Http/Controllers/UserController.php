@@ -38,11 +38,16 @@ $users = User::all();
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
+            
         ]);
 
-        User::create($validatedData);
+        // Check if the request is for admin registration
+        $role = $request->input('role') == 'admin' ? 'admin' : 'user';
+    
+        // Create the user with the appropriate role
+        User::create(array_merge($validatedData, ['role' => $role]));
 
-        return redirect()->route('viewusers.index')
+        return redirect()->route('viewusers')
             ->with('success', 'User created successfully');
     }
 
