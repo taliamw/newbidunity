@@ -79,6 +79,7 @@ Route::put('/viewusers/{user}', [UserController::class, 'update'])->name('viewus
 Route::delete('/viewusers/{user}', [UserController::class, 'destroy'])->name('viewusers.destroy');
 
 Route::get('/chartjs-page', [UserController::class, 'loadChartJsPage'])->name('chartjs-page');
+Route::get('/add_admin', [UserController::class, 'add_admin'])->name('add_admin');
 Route::get('/generate-pdf', [PDFController::class, 'generatePDF'])->name('generate.pdf');
 Route::get('/report/user-report', [PDFController::class, 'downloadUserReport'])->name('report.user-report');
 Route::get('/export-table-pdf', [PDFController::class, 'exportTableToPDF'])->name('export.table.pdf');

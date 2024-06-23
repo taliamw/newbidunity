@@ -7,7 +7,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Corona Admin</title>
+    <title>BidUnity Admin</title>
     <!-- plugins:css -->
     <link rel="stylesheet" href="assets/assets_admin/vendors/mdi/css/materialdesignicons.min.css">
     <link rel="stylesheet" href="assets/assets_admin/vendors/css/vendor.bundle.base.css">
@@ -89,19 +89,20 @@
         </a>
       </li>
       <li class="nav-item menu-items">
-        <a class="nav-link" data-bs-toggle="collapse" href="#auth" aria-expanded="false" aria-controls="auth">
+        <a class="nav-link" href="/add_admin">
           <span class="menu-icon">
-            <i class="mdi mdi-security"></i>
+            <i class="mdi mdi-chart-bar"></i>
           </span>
-          <span class="menu-title">View Users</span>
-          <i class="menu-arrow"></i>
+          <span class="menu-title">Create Admin</span>
         </a>
-        <div class="collapse" id="auth">
-          <ul class="nav flex-column sub-menu">
-            <li class="nav-item">
-                 <a class="nav-link" href="viewusers"> View Users </a></li>
-          </ul>
-        </div>
+      </li>
+      <li class="nav-item menu-items">
+        <a class="nav-link" href="/viewusers">
+          <span class="menu-icon">
+            <i class="mdi mdi-chart-bar"></i>
+          </span>
+          <span class="menu-title">ViewUsers</span>
+        </a>
       </li>
       <li class="nav-item menu-items">
         <a class="nav-link" href="/reports/user-report">

@@ -87,8 +87,17 @@ $users = User::all();
             ->with('success', 'User deleted successfully');
     }
 public function loadChartJsPage(){
-    return view("chartjs-page");
+    return view("admin.chartjs-page");
 }
+
+
+public function add_admin(){
+    return view("admin.add_admin");
+}
+
+
+
+
 public function fetchUserRoleStatistics()
 {
     $adminCount = User::where('role', 'admin')->count();
