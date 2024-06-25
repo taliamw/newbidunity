@@ -96,16 +96,14 @@ public function add_admin(){
 }
 
 
+public function getUsersAndAdminsCount()
+    {
+        $usersCount = User::where('role', 'user')->count();
+        $adminsCount = User::where('role', 'admin')->count();
 
-
-public function fetchUserRoleStatistics()
-{
-    $adminCount = User::where('role', 'admin')->count();
-    $userCount = User::where('role', 'user')->count();
-
-    return response()->json([
-        'adminCount' => $adminCount,
-        'userCount' => $userCount,
-    ]);
-}
+        return response()->json([
+            'users' => $usersCount,
+            'admins' => $adminsCount,
+        ]);
+    }
 }

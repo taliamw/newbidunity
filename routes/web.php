@@ -83,6 +83,7 @@ Route::get('/add_admin', [UserController::class, 'add_admin'])->name('add_admin'
 Route::get('/generate-pdf', [PDFController::class, 'generatePDF'])->name('generate.pdf');
 Route::get('/report/user-report', [PDFController::class, 'downloadUserReport'])->name('report.user-report');
 Route::get('/export-table-pdf', [PDFController::class, 'exportTableToPDF'])->name('export.table.pdf');
+Route::get('/api/users-admins-count', [UserController::class, 'getUsersAndAdminsCount']);
 
 
 // // Routes that need authentication and lock check
