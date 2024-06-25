@@ -1,7 +1,7 @@
 @extends('layout')
 
 @section('content')
-
+<br><br><br>
     <div class="container-scroller">
 
         <!-- partial -->
@@ -17,33 +17,20 @@
               </nav>
             </div>
             <div class="row">
-
               <div class="col-lg-6 grid-margin stretch-card">
                 <div class="card">
                   <div class="card-body">
-                    <h4 class="card-title">Bar chart</h4>
-                    <canvas id="barChart" style="height:230px"></canvas>
+                    <h4 class="card-title">Admin vs Users</h4>
+                    <canvas id="adminUserChart" style="height:230px"></canvas>
                   </div>
                 </div>
               </div>
-              <div class="col-lg-6 grid-margin stretch-card">
-                <div class="card">
-                  <div class="card-body">
-                    <h4 class="card-title">Pie chart</h4>
-                    <canvas id="pieChart" style="height:250px"></canvas>
-                  </div>
-                </div>
-              </div>
-            </div>
-
             </div>
             <button class="btn btn-danger" style="position: absolute; top: 70%; left: 50%; transform: translate(-50%, -50%); margin-top: 70px;">
-<!-- Example link to trigger PDF generation -->
-<a href="{{ route('generate.pdf') }}" target="_blank">Generate PDF Report</a>
+              <a href="{{ route('generate.pdf') }}" target="_blank">Generate PDF Report</a>
             </button>
           </div>
           <!-- content-wrapper ends -->
-
         <!-- main-panel ends -->
       </div>
       <!-- page-body-wrapper ends -->
@@ -66,46 +53,41 @@
     <script src="../../assets/assets_admin/js/chart.js"></script>
     <!-- End custom js for this page -->
 
-   <script>
-    function generatePDF() {
-    // Example chart data or configurations
-    const data1 = ['data1', 30, 200, 100, 400, 150, 250];
-    const data2 = ['data2', 130, 100, 140, 200, 150, 50];
-
-    // Convert chart data to an HTML table
-    const chartDataAsTable = convertToHTMLTable([data1, data2]); // Pass your chart data arrays here
-
-    // Logic to handle PDF generation
-    fetch("{{ route('generate.pdf') }}", {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            chartDataAsTable: chartDataAsTable,
-            // Add more data if needed for server-side PDF generation
-        }),
-    })
-    .then(response => response.blob())
-    .then(blob => {
-        // Create a temporary link element to download the PDF
-        const url = window.URL.createObjectURL(new Blob([blob]));
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'report.pdf';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        window.URL.revokeObjectURL(url);
-    })
-    .catch(error => {
-        console.error('Error:', error);
-    });
-}
-
-
-   </script>
-
-
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            fetch('/api/users-admins-count')
+                .then(response => response.json())
+                .then(data => {
+                    const ctx = document.getElementById('adminUserChart').getContext('2d');
+                    new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: ['Admins', 'Users'],
+                            datasets: [{
+                                label: 'Count',
+                                data: [data.admins, data.users],
+                                backgroundColor: [
+                                    'rgba(255, 99, 132, 0.2)',
+                                    'rgba(54, 162, 235, 0.2)'
+                                ],
+                                borderColor: [
+                                    'rgba(255, 99, 132, 1)',
+                                    'rgba(54, 162, 235, 1)'
+                                ],
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            scales: {
+                                y: {
+                                    beginAtZero: true
+                                }
+                            }
+                        }
+                    });
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        });
+    </script>
 
 @endsection
