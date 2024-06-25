@@ -33,23 +33,31 @@ $users = User::all();
     }*/
 
     // Store a newly created user in the database
-    public function store(Request $request)
-    {
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            
-        ]);
+   // App\Http\Controllers\UserController.php
 
-        // Check if the request is for admin registration
-        $role = $request->input('role') == 'admin' ? 'admin' : 'user';
+   public function store(Request $request)
+   {
+       $validatedData = $request->validate([
+           'name' => 'required|string|max:255',
+           'email' => 'required|email|unique:users,email',
+       ]);
+   
+       $isAdmin = in_array($request->input('email'), ['moneyass358@gmail.com', 'admin2@example.com']);
+   
+       $user = User::create(array_merge($validatedData, ['role' => $isAdmin ? 'admin' : 'user']));
+   
+       if ($isAdmin) {
+           // Log in the admin user
+           Auth::login($user);
+           return redirect()->route('admin.home'); // Redirect admins to the admin dashboard
+       } else {
+           return redirect()->route('viewusers')
+               ->with('success', 'User created successfully'); // Default redirection for other users
+       }
+   }
+   
+
     
-        // Create the user with the appropriate role
-        User::create(array_merge($validatedData, ['role' => $role]));
-
-        return redirect()->route('viewusers')
-            ->with('success', 'User created successfully');
-    }
 
     // Display the specified user
     public function show(User $user)

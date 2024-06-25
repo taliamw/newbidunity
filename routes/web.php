@@ -6,6 +6,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\PDFController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PaymentDetailsController;
+use App\Http\Controllers\ProductController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -99,3 +100,5 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/payment-details', [PaymentDetailsController::class, 'edit'])->name('payment-details.edit');
     Route::put('/payment-details', [PaymentDetailsController::class, 'update'])->name('payment-details.update');
 });
+// Route::get('/products', [ProductController::class, 'index'])->name('products');
+Route::get('/products', [ProductController::class, 'index'])->name('products.index');
