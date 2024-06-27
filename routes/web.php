@@ -2,11 +2,16 @@
 namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
+use Laravel\Jetstream\Jetstream;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\PDFController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PaymentDetailsController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\TeamController;
+use App\Http\Controllers\CurrentTeamController;
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -98,8 +103,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/sign_in', function () {
         return view('sign_in');
     })->name('sign_in');
+    Route::get('/home', function () {
+        return view('home');
+    })->name('home');
     Route::get('/payment-details', [PaymentDetailsController::class, 'edit'])->name('payment-details.edit');
     Route::put('/payment-details', [PaymentDetailsController::class, 'update'])->name('payment-details.update');
+    Route::get('/teams/{team}', [TeamController::class, 'show'])->name('teams.show');
+    Route::get('/teams/create', [TeamController::class, 'create'])->name('teams.create');
+    Route::post('/teams', [TeamController::class, 'store'])->name('teams.store');
+    // Route::put('/current-team/{team}', [CurrentTeamController::class, 'update'])->name('current-team.update');
 });
 // Route::get('/products', [ProductController::class, 'index'])->name('products');
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
