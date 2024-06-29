@@ -86,4 +86,10 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->belongsTo(Team::class, 'current_team_id');
     }
+
+    public function contributions()
+{
+    return $this->hasMany(Contribution::class);
+}
+
 }

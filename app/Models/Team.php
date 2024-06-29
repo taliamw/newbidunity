@@ -21,4 +21,10 @@ class Team extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function contributions()
+{
+    return $this->hasMany(Contribution::class);
+}
+
 }
