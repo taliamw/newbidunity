@@ -27,8 +27,7 @@
         @endif
         <!-- Page Content -->
         <main>
-            <!-- Render your Livewire components or Blade views here -->
-            {{ $slot ?? '' }}
+            @yield('content')
         </main>
     </div>
     @stack('modals')

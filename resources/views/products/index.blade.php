@@ -1,66 +1,56 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <h1 class="my-4">Products</h1>
+<div class="container mx-auto px-4">
+    <h1 class="text-2xl font-bold my-4">Products</h1>
 
     <!-- Search bar -->
-    <div class="row mb-4">
-        <div class="col-md-6">
-            <form action="{{ route('products.index') }}" method="GET" class="form-inline">
-                <div class="input-group">
-                    <input type="text" name="search" class="form-control" placeholder="Search products">
-                    <div class="input-group-append">
-                        <button type="submit" class="btn btn-outline-secondary">Search</button>
-                    </div>
-                </div>
-            </form>
-        </div>
+    <div class="flex mb-4">
+        <form action="{{ route('products.index') }}" method="GET" class="flex w-full">
+            <input type="text" name="search" class="form-input w-full" placeholder="Search products" value="{{ request()->input('search') }}">
+            <button type="submit" class="btn btn-primary ml-2">Search</button>
+        </form>
     </div>
 
     <!-- Product cards -->
-    <div class="row">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         @forelse($products as $product)
-        <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card h-100">
-                @if($product->image)
-                    <img class="card-img-top" src="{{ $product->image }}" alt="{{ $product->name }}">
-                @else
-                    <div class="image-placeholder" style="height: 200px; background-color: #eee; text-align: center; display: flex; justify-content: center; align-items: center;">
-                        <span>No Image Available</span>
-                    </div>
-                @endif
-                <div class="card-body">
-                    <h4 class="card-title">{{ $product->name }}</h4>
-                    <p class="card-text">{{ $product->description }}</p>
-                    <h5>${{ $product->price }}</h5>
+        <div class="card border border-gray-200 rounded-lg shadow hover:shadow-lg transition-shadow duration-300">
+            @if($product->image)
+                <img class="w-full h-48 object-cover rounded-t-lg" src="{{ $product->image }}" alt="{{ $product->name }}">
+            @else
+                <div class="w-full h-48 bg-gray-200 flex items-center justify-center rounded-t-lg">
+                    <span>No Image Available</span>
                 </div>
-                <div class="card-footer">
-                    <a href="#" class="btn btn-primary">View Details</a>
-                </div>
+            @endif
+            <div class="p-4">
+                <h4 class="text-lg font-semibold">{{ $product->name }}</h4>
+                <p class="text-gray-600">{{ $product->description }}</p>
+                <h5 class="text-xl font-bold mt-2">${{ $product->price }}</h5>
+            </div>
+            <div class="p-4 bg-gray-100">
+                <a href="{{ route('products.show', $product->id) }}" class="btn btn-primary w-full">View Details</a>
             </div>
         </div>
         @empty
-        <div class="col-12">
+        <div class="col-span-1 md:col-span-2 lg:col-span-3">
             <div class="alert alert-warning" role="alert">
                 No products available.
             </div>
             <!-- Placeholder products -->
-            <div class="row">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 @for($i = 1; $i <= 3; $i++)
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="card h-100">
-                        <div class="image-placeholder" style="height: 200px; background-color: #eee; text-align: center; display: flex; justify-content: center; align-items: center;">
-                            <span>No Image Available</span>
-                        </div>
-                        <div class="card-body">
-                            <h4 class="card-title">Placeholder Product {{ $i }}</h4>
-                            <p class="card-text">This is a description of placeholder product {{ $i }}.</p>
-                            <h5>$99.99</h5>
-                        </div>
-                        <div class="card-footer">
-                            <a href="#" class="btn btn-primary">View Details</a>
-                        </div>
+                <div class="card border border-gray-200 rounded-lg shadow hover:shadow-lg transition-shadow duration-300">
+                    <div class="w-full h-48 bg-gray-200 flex items-center justify-center rounded-t-lg">
+                        <span>No Image Available</span>
+                    </div>
+                    <div class="p-4">
+                        <h4 class="text-lg font-semibold">Placeholder Product {{ $i }}</h4>
+                        <p class="text-gray-600">This is a description of placeholder product {{ $i }}.</p>
+                        <h5 class="text-xl font-bold mt-2">$99.99</h5>
+                    </div>
+                    <div class="p-4 bg-gray-100">
+                        <a href="#" class="btn btn-primary w-full">View Details</a>
                     </div>
                 </div>
                 @endfor
@@ -70,14 +60,8 @@
     </div>
 
     <!-- Navigation -->
-    <nav aria-label="Page navigation">
-        <ul class="pagination justify-content-center mt-3">
-            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-            <li class="page-item active"><a class="page-link" href="#">1</a></li>
-            <li class="page-item"><a class="page-link" href="#">2</a></li>
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item"><a class="page-link" href="#">Next</a></li>
-        </ul>
-    </nav>
+    <div class="mt-6">
+        {{ $products->appends(request()->input())->links() }}
+    </div>
 </div>
 @endsection

@@ -2,14 +2,21 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Product;
 use Illuminate\Http\Request;
+use App\Models\NewProduct;
 
 class ProductController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::all();
+        $search = $request->input('search');
+        $products = NewProduct::where('name', 'like', "%{$search}%")->paginate(12);
         return view('products.index', compact('products'));
+    }
+
+    public function show($id)
+    {
+        $product = NewProduct::findOrFail($id);
+        return view('products.show', compact('product'));
     }
 }
