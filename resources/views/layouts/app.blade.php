@@ -32,7 +32,7 @@
     </div>
     @stack('modals')
     @livewireScripts
-    <script>
+    <!-- <script>
         let inactivityTime = function () {
             let time;
             window.onload = resetTimer;
@@ -57,6 +57,6 @@
         };
         
         inactivityTime();
-    </script>
+    </script> -->
 </body>
 </html>

@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('password')->default('0000');
             $table->string('role')->default('user');
             $table->rememberToken();
-            $table->foreignId('current_team_id')->nullable();
+            $table->foreignId('current_team_id')->nullable()->constrained('teams');
             $table->string('profile_photo_path', 2048)->nullable();
             $table->timestamps();
         });

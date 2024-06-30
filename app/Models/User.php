@@ -10,6 +10,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Sanctum\HasApiTokens;
 use App\Notifications\CustomVerifyEmail; 
+use Laravel\Jetstream\HasTeams; 
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -18,6 +19,7 @@ class User extends Authenticatable implements MustVerifyEmail
     use HasProfilePhoto;
     use Notifiable;
     use TwoFactorAuthenticatable;
+    use HasTeams;
 
     /**
      * The attributes that are mass assignable.
@@ -72,4 +74,22 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         $this->notify(new CustomVerifyEmail);
     }
+
+    public function teams()
+    {
+        return $this->belongsToMany(Team::class, 'team_user')
+                    ->withTimestamps()
+                    ->as('membership');
+    }
+
+    public function currentTeam()
+    {
+        return $this->belongsTo(Team::class, 'current_team_id');
+    }
+
+    public function contributions()
+{
+    return $this->hasMany(Contribution::class);
+}
+
 }
