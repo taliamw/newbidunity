@@ -40,6 +40,9 @@ Create a copy of the .env.example file and rename it to .env. Update the databas
 #### 8. Run the Application
     php artisan serve
 
+## Project Structure
+The project structure is documented in the [project_structure.txt](project_structure.txt) file.
+
 ## Contibutors
 * [Natalia Mwangi](https://github.com/taliamw)
 * [Michael Mirieri](https://github.com/MirieriMichael)
