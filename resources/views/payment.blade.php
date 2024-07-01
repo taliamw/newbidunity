@@ -21,13 +21,17 @@
             </div>
 
             <input type="hidden" name="setup_intent_client_secret" value="{{ $clientSecret }}" />
+<br>
 
-            <div class="flex items-center justify-end mt-4">
+            <div>
                 <x-button id="submit" class="ml-4">
                     {{ __('Submit Payment') }}
                 </x-button>
             </div>
         </form>
+        <div class="flex items-center justify-end mt-4">
+            <a href="{{ route('dashboard') }}" class="ml-4 text-sm text-gray-600 underline">Back to Dashboard</a>
+        </div>
         <br>
         <div class="border-t border-gray-200"></div>
         <div class="mt-4 text-center">
