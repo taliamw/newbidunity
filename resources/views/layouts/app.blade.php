@@ -1,98 +1,59 @@
-<x-guest-layout>
-    <x-authentication-card>
-        <x-slot name="logo">
-            <x-authentication-card-logo />
-        </x-slot>
-
-        <x-validation-errors class="mb-4" />
-
-        <form id="payment-form" method="POST" action="{{ route('payment.handle') }}">
-            @csrf
-
-            <div>
-                <x-label for="name" value="{{ __('Name on Card') }}" />
-                <x-input id="name" class="block mt-1 w-full" type="text" name="name" required autofocus />
-            </div>
-
-            <div class="mt-4">
-                <x-label for="card-element" value="{{ __('Credit or Debit Card') }}" /><br>
-                <div id="card-element" class="block mt-1 w-full"></div>
-                <div id="card-errors" class="mt-2 text-sm text-red-600"></div><br>
-            </div>
-
-            <input type="hidden" name="setup_intent_client_secret" value="{{ $clientSecret }}" />
-
-            <div class="flex items-center justify-end mt-4">
-                <x-button id="submit" class="ml-4">
-                    {{ __('Submit Payment') }}
-                </x-button>
-            </div>
-        </form>
-        <br>
-        <div class="border-t border-gray-200"></div>
-        <div class="mt-4 text-center">
-                    <p class="text-sm text-gray-500">Powered by Stripe</p>
+<meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>{{ config('app.name', 'Laravel') }}</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <!-- Scripts -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <!-- Styles -->
+    @livewireStyles
+</head>
+<body class="font-sans antialiased">
+    <x-banner />
+    <div class="min-h-screen bg-gray-100">
+        @livewire('navigation-menu')
+        <!-- Page Heading -->
+        @if (isset($header))
+            <header class="bg-white shadow">
+                <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                    {{ $header }}
                 </div>
-    </x-authentication-card>
-
-    <script src="https://js.stripe.com/v3/"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const stripe = Stripe('{{ env('STRIPE_KEY') }}');
-
-            const elements = stripe.elements();
-            const cardElement = elements.create('card');
-            cardElement.mount('#card-element');
-
-            const handleSubmit = async (event) => {
-                event.preventDefault();
-
-                const formData = new FormData(event.target);
-
-                const { setupIntent, error } = await stripe.confirmCardSetup(
-                    formData.get('setup_intent_client_secret'), 
-                    {
-                        payment_method: {
-                            card: cardElement,
-                            billing_details: {
-                                name: formData.get('name'),
-                            },
-                        },
-                    }
-                );
-
-                if (error) {
-                    console.error('Failed to confirm card setup:', error);
-                    const errorElement = document.getElementById('card-errors');
-                    errorElement.textContent = error.message;
-                } else {
-                    console.log('SetupIntent successful:', setupIntent);
-
-                    const response = await fetch('/handle-payment', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                        },
-                        body: JSON.stringify({
-                            setup_intent_client_secret: setupIntent.client_secret,
-                        }),
-                    });
-
-                    const responseData = await response.json();
-                    if (response.ok) {
-                        console.log('Payment confirmed on server:', responseData);
-                        alert('success')
-                        redirect
-                    } else {
-                        console.error('Failed to confirm payment on server:', responseData.error);
-                        alert('Failed to confirm payment.')
-                    }
-                }
-            };
-
-            const form = document.getElementById('payment-form');
-            form.addEventListener('submit', handleSubmit);
-        });
-    </script>
-</x-guest-layout>
+            </header>
+        @endif
+        <!-- Page Content -->
+        <main>
+            @yield('content')
+        </main>
+    </div>
+    @stack('modals')
+    @livewireScripts
+    <!-- <script>
+        let inactivityTime = function () {
+            let time;
+            window.onload = resetTimer;
+            window.onmousemove = resetTimer;
+            window.onmousedown = resetTimer;  // catches touchscreen presses
+            window.ontouchstart = resetTimer; // catches touch screen swipes
+            window.onclick = resetTimer;      // catches touchpad clicks
+            window.onkeydown = resetTimer;   
+            window.addEventListener('scroll', resetTimer, true); // improved; see comments
+        
+            function lockScreen() {
+                axios.post('/lock-screen').then(response => {
+                    sessionStorage.setItem('screen_locked', 'true');
+                    window.location.href = '/lock-screen';
+                });
+            }
+        
+            function resetTimer() {
+                clearTimeout(time);
+                time = setTimeout(lockScreen, 600000);  // 10 minutes
+            }
+        };
+        
+        inactivityTime();
+    </script> -->
+</body>
+</html>
