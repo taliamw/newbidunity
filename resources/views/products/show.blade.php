@@ -1,24 +1,83 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <h1 class="my-4">{{ $product->name }}</h1>
+<div class="container my-5">
+    <h1 class="mb-4">{{ $product->name }}</h1>
+
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-6 mb-4">
             @if($product->image)
-                <img class="img-fluid" src="{{ asset($product->image) }}" alt="{{ $product->name }}">
+            <img class="img-fluid rounded" src="{{ asset($product->image) }}" alt="{{ $product->name }}">
             @else
-                <div class="image-placeholder" style="height: 200px; background-color: #eee; text-align: center; display: flex; justify-content: center; align-items: center;">
-                    <span>No Image Available</span>
-                </div>
+            <div class="bg-light d-flex align-items-center justify-content-center rounded" style="height: 300px;">
+                <span>No Image Available</span>
+            </div>
             @endif
         </div>
         <div class="col-md-6">
-            <h4>Description</h4>
+            <h3 class="my-3">${{ number_format($product->price, 2) }}</h3>
             <p>{{ $product->description }}</p>
-            <h5>Price: ${{ $product->price }}</h5>
-            <p><strong>Auction Status:</strong> {{ ucfirst($product->auction_status) }}</p>
-            <a href="{{ route('products.index') }}" class="btn btn-primary">Back to Products</a>
+
+            {{-- Determine Auction Status --}}
+            @php
+                $highestBid = $product->bids()->orderBy('amount', 'desc')->first();
+            @endphp
+            <h4 class="my-3">Auction Status:
+                @if($highestBid)
+                    <span class="badge badge-info">Highest Bid: ${{ number_format($highestBid->amount, 2) }}</span>
+                @else
+                    <span class="badge badge-secondary">No Bids Yet</span>
+                @endif
+            </h4>
+
+            {{-- Wishlist Form --}}
+            @if(auth()->user()->wishlist->contains($product->id))
+            <form action="{{ route('wishlist.remove', $product) }}" method="POST">
+                @csrf
+                <button type="submit" class="btn btn-danger">Remove from Wishlist</button>
+            </form>
+            @else
+            <form action="{{ route('wishlist.add', $product) }}" method="POST">
+                @csrf
+                <button type="submit" class="btn btn-primary">Add to Wishlist</button>
+            </form>
+            @endif
+
+            {{-- Bid Form --}}
+            <form action="{{ route('products.placeBid', $product) }}" method="POST" class="mt-3">
+                @csrf
+                <div class="form-group">
+                    <label for="amount">Place your bid:</label>
+                    <input type="number" name="amount" class="form-control" id="amount" step="0.01" min="0.01" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Place Bid</button>
+            </form>
+
+            {{-- Bids List --}}
+            <h4 class="my-3">Bids</h4>
+            <ul class="list-group">
+                @foreach($bids as $bid)
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span>{{ $bid->user->name }}</span>
+                    <span>${{ number_format($bid->amount, 2) }}</span>
+                    @if(auth()->user()->id === $bid->user_id)
+                    <form action="{{ route('products.removeBid', $bid) }}" method="POST">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-sm btn-outline-danger">Remove Bid</button>
+                    </form>
+                    @endif
+                </li>
+                @endforeach
+            </ul>
+
+            {{-- Winning Bid --}}
+            @if($winningBid)
+            <div class="mt-4">
+                <h4>Winning Bid</h4>
+                <p>{{ $winningBid->user->name }} - ${{ number_format($winningBid->amount, 2) }}</p>
+            </div>
+            @endif
         </div>
     </div>
 </div>

@@ -8,6 +8,7 @@ use App\Http\Controllers\PaymentDetailsController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\ContributionController;
+use App\Http\Controllers\WishlistController;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,49 +21,22 @@ use App\Http\Controllers\ContributionController;
 |
 */
 
+// Public Routes
+Route::get('/', function () {
+    return view('home');
+})->name('home');
 
-Route::middleware(['auth', 'verified'])->group(function () {
-
-    Route::post('/teams/sendJoinRequest', [TeamController::class, 'sendJoinRequest'])->name('teams.sendJoinRequest');
-    Route::get('/teams/{team}/admit/{user}', [TeamController::class, 'admit'])->name('teams.admit');
-
-
-    Route::get('/sign_in', function () {
-        return view('sign_in');
-    })->name('sign_in');
-    
-    Route::get('/home', function () {
-        return view('home');
-    })->name('home');
-    
-    Route::get('/payment-details', [PaymentDetailsController::class, 'edit'])->name('payment-details.edit');
-    Route::put('/payment-details', [PaymentDetailsController::class, 'update'])->name('payment-details.update');
-    
-    Route::get('/teams/{team}', [TeamController::class, 'show'])->name('teams.show');
-    Route::get('/teams/create', [TeamController::class, 'join'])->name('teams.join');
-    Route::post('/teams', [TeamController::class, 'store'])->name('teams.store');
-
-    Route::post('/contributions', [ContributionController::class, 'store'])->name('contributions.store');
-    
-    // Route::get('/products', [ProductController::class, 'index'])->name('products');
-    Route::get('/products', [ProductController::class, 'index'])->name('products.index');
-
-    Route::get('/test', function () {
-        return 'Route is working';
-    });
-});
-
-
+Route::get('/home', function () {
+    return view('home');
+})->name('home');
 
 Route::get('/signup', function () {
     return view('signup');
 })->name('signup');
 
-Route::get('/email/verify', function () {
-    return view('auth.verify-email');
-})->middleware(['auth'])->name('verification.notice');
-
-Route::get('/admin', [UserController::class, 'index']);
+// Route::get('/email/verify', function () {
+//     return view('auth.verify-email');
+// })->middleware(['auth'])->name('verification.notice');
 
 Route::get('/lock-screen', function () {
     return view('auth.lock-screen');
@@ -73,15 +47,46 @@ Route::post('/lock-screen', function () {
     return response()->json(['status' => 'locked']);
 });
 
-Route::get('/dashboard', function () {
-    if (session('screen_locked', false)) {
-        return redirect()->route('lock-screen');
-    }
-    // Proceed to dashboard if screen is unlocked
-    return view('dashboard');
-})->middleware('auth')->name('dashboard');
+// Authentication and Lock Screen Routes
+// Route::middleware(['auth', 'verified'])->group(function () {
+//     Route::get('/sign_in', function () {
+//         return view('sign_in');
+//     })->name('sign_in');
 
-Route::post('/unlock-screen', [AuthController::class, 'unlockScreen'])->name('unlock-screen');
+    Route::get('/payment-details', [PaymentDetailsController::class, 'edit'])->name('payment-details.edit');
+    Route::put('/payment-details', [PaymentDetailsController::class, 'update'])->name('payment-details.update');
+
+    Route::get('/dashboard', function () {
+        if (session('screen_locked', false)) {
+            return redirect()->route('lock-screen');
+        }
+        return view('dashboard');
+    })->name('dashboard');
+
+    Route::post('/unlock-screen', [AuthController::class, 'unlockScreen'])->name('unlock-screen');
+
+    // Product Routes
+    Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+    Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
+    Route::post('/products/{product}/bid', [ProductController::class, 'placeBid'])->name('products.placeBid');
+    Route::get('/products/{product}/winner', [ProductController::class, 'determineWinner'])->name('products.determineWinner');
+    Route::delete('/products/{bid}/remove-bid', 'ProductController@removeBid')->name('products.removeBid');
+    Route::delete('/bids/{bid}', [ProductController::class, 'removeBid'])->name('products.removeBid');
+
+
+    // Team Routes
+    Route::post('/teams/sendJoinRequest', [TeamController::class, 'sendJoinRequest'])->name('teams.sendJoinRequest');
+    Route::get('/teams/{team}/admit/{user}', [TeamController::class, 'admit'])->name('teams.admit');
+    Route::get('/teams/{team}', [TeamController::class, 'show'])->name('teams.show');
+    Route::get('/teams/create', [TeamController::class, 'join'])->name('teams.join');
+    Route::post('/teams', [TeamController::class, 'store'])->name('teams.store');
+
+    // Contribution Routes
+    Route::post('/contributions', [ContributionController::class, 'store'])->name('contributions.store');
+;
+
+// Admin Routes
+Route::get('/admin', [UserController::class, 'index']);
 
 Route::get('/viewusers', [UserController::class, 'viewUsers'])->name('viewusers');
 Route::get('/viewusers/create', [UserController::class, 'create'])->name('viewusers.create');
@@ -99,20 +104,11 @@ Route::get('/export-table-pdf', [PDFController::class, 'exportTableToPDF'])->nam
 Route::get('/api/users-admins-count', [UserController::class, 'getUsersAndAdminsCount']);
 
 
-// // Routes that need authentication and lock check
-// Route::middleware(['auth', 'check.locked'])->group(function () {
-//     Route::get('/dashboard', function () {
-//         return view('dashboard'); // Adjust as needed
-//     })->name('dashboard');
-// });
+Route::post('/wishlist/add/{product}', [WishlistController::class, 'add'])->name('wishlist.add');
+Route::post('/wishlist/remove/{product}', [WishlistController::class, 'remove'])->name('wishlist.remove');
 
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/sign_in', function () {
-        return view('sign_in');
-    })->name('sign_in');
-    Route::get('/payment-details', [PaymentDetailsController::class, 'edit'])->name('payment-details.edit');
-    Route::put('/payment-details', [PaymentDetailsController::class, 'update'])->name('payment-details.update');
+
+// Test Route
+Route::get('/test', function () {
+    return 'Route is working';
 });
-// Route::get('/products', [ProductController::class, 'index'])->name('products');
-Route::get('/products', [ProductController::class, 'index'])->name('products.index');
-Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');

@@ -28,8 +28,18 @@
                 <p class="text-gray-600">{{ $product->description }}</p>
                 <h5 class="text-xl font-bold mt-2">${{ $product->price }}</h5>
             </div>
-            <div class="p-4 bg-gray-100">
-                <a href="{{ route('products.show', $product->id) }}" class="btn btn-primary w-full">View Details</a>
+            <div class="p-4 bg-gray-100 flex justify-between items-center">
+                <form action="{{ route('wishlist.add', $product) }}" method="POST">
+                    @csrf
+                    <button type="submit" class="btn btn-primary">
+                        @if(auth()->user()->wishlist->contains($product->id))
+                            Remove from Wishlist
+                        @else
+                            Add to Wishlist
+                        @endif
+                    </button>
+                </form>
+                <a href="{{ route('products.show', $product->id) }}" class="btn btn-secondary">View Details</a>
             </div>
         </div>
         @empty
