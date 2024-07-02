@@ -93,6 +93,7 @@
 
 
     <!-- ======= Gallery Section ======= -->
+    @if (!Request::is('viewusers'))
     <section id="gallery" class="gallery section-bg">
       <div class="container" data-aos="fade-up">
 
@@ -208,6 +209,8 @@
 
   </footer><!-- End Footer -->
   <!-- End Footer -->
+  @endif
+
 
   <a href="#" class="scroll-top d-flex align-items-center justify-content-center"><i
       class="bi bi-arrow-up-short"></i></a>
