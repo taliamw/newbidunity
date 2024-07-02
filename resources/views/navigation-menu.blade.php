@@ -18,11 +18,15 @@
                     <x-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                         {{ __('Dashboard') }}
                     </x-nav-link>
+                    <x-nav-link href="{{ route('products.index') }}" :active="request()->routeIs('products')">
+                        {{ __('Products') }}
+                    </x-nav-link>
                 </div>
             </div>
-
+            
             <div class="hidden sm:flex sm:items-center sm:ml-6">
                 <!-- Teams Dropdown -->
+                @if(Auth::check())
                     <div class="ml-3 relative">
                         <x-dropdown align="right" width="60">
                             <x-slot name="trigger">
@@ -69,6 +73,7 @@
                             </x-slot>
                         </x-dropdown>
                     </div> -->
+                @endif
 
                 <!-- Settings Dropdown -->
                 <div class="ml-3 relative">

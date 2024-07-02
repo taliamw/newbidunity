@@ -9,6 +9,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\TeamController;
 use App\Http\Controllers\ContributionController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\WishlistController;
 
 /*
 |--------------------------------------------------------------------------
@@ -21,7 +22,7 @@ use App\Http\Controllers\PaymentController;
 |
 */
 
-
+//routes that require logged in and verified email
 Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::post('/teams/sendJoinRequest', [TeamController::class, 'sendJoinRequest'])->name('teams.sendJoinRequest');
@@ -55,9 +56,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/handle-payment', [PaymentController::class, 'handlePayment'])->name('payment.handle');
 });
 
-
-    Route::get('/', function () {
-        return view('home');
+//public routes
+Route::get('/', function () {
+    return view('home');
     })->name('home');
 
 Route::get('/signup', function () {
@@ -120,5 +121,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::put('/payment-details', [PaymentDetailsController::class, 'update'])->name('payment-details.update');
 });
 // Route::get('/products', [ProductController::class, 'index'])->name('products');
-Route::get('/products', [ProductController::class, 'index'])->name('products.index');
-Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
+// Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+// Route::get('/products/{id}', [ProductController::class, 'show'])->name('products.show');
+
+ // Product Routes
+ Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+ Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
+ Route::post('/products/{product}/bid', [ProductController::class, 'placeBid'])->name('products.placeBid');
+ Route::get('/products/{product}/winner', [ProductController::class, 'determineWinner'])->name('products.determineWinner');
+ Route::delete('/products/{bid}/remove-bid', 'ProductController@removeBid')->name('products.removeBid');
+ Route::delete('/bids/{bid}', [ProductController::class, 'removeBid'])->name('products.removeBid');
+ Route::post('/wishlist/add/{product}', [WishlistController::class, 'add'])->name('wishlist.add');
+Route::post('/wishlist/remove/{product}', [WishlistController::class, 'remove'])->name('wishlist.remove');

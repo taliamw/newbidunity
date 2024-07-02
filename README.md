@@ -12,7 +12,7 @@ This web app revolutionizes online auctions by enabling joint investment project
 1. PHP installed on your system (version 7.4 or higher recommended)
 2. Composer globally installed
 3. Node.js and npm installed
-4. MySQL or another compatible database installed
+4. MySQL installed
 5. Git installed
 
 #### 1. Clone the repository

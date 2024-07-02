@@ -37,7 +37,9 @@
 
         <!-- Page Content -->
         <main class="container my-4">
+        @yield( 'content' )
             {{ $slot ?? ''}}
+            
         </main>
     </div>
 
