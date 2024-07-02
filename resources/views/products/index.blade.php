@@ -32,7 +32,7 @@
                 <form action="{{ route('wishlist.add', $product) }}" method="POST">
                     @csrf
                     <button type="submit" class="btn btn-primary">
-                        @if(auth()->user()->wishlist->contains($product->id))
+                        @if(auth()->user()->wishlist && auth()->user()->wishlist->contains($product->id))
                             Remove from Wishlist
                         @else
                             Add to Wishlist

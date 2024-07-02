@@ -31,7 +31,7 @@
             </h4>
 
             {{-- Wishlist Form --}}
-            @if(auth()->user()->wishlist->contains($product->id))
+            @if(auth()->user()->wishlist && auth()->user()->wishlist->contains($product->id))
             <form action="{{ route('wishlist.remove', $product) }}" method="POST">
                 @csrf
                 <button type="submit" class="btn btn-danger">Remove from Wishlist</button>
