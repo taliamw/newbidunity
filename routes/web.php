@@ -133,3 +133,4 @@ Route::middleware(['auth', 'verified'])->group(function () {
  Route::delete('/bids/{bid}', [ProductController::class, 'removeBid'])->name('products.removeBid');
  Route::post('/wishlist/add/{product}', [WishlistController::class, 'add'])->name('wishlist.add');
 Route::post('/wishlist/remove/{product}', [WishlistController::class, 'remove'])->name('wishlist.remove');
+Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');

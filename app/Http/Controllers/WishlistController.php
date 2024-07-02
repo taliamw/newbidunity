@@ -23,4 +23,11 @@ class WishlistController extends Controller
 
         return redirect()->back()->with('success', 'Product removed from wishlist.');
     }
+    public function index()
+    {
+        $user = auth()->user();
+        $wishlist = $user->wishlist()->paginate(10); // Adjust pagination as per your needs
+        
+        return view('wishlist.index', compact('wishlist'));
+    }
 }
