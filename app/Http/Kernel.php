@@ -64,5 +64,6 @@ class Kernel extends HttpKernel
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'screen_locked' => \App\Http\Middleware\CheckScreenLocked::class,
+        'admin.redirect' => \App\Http\Middleware\RedirectIfAdmin::class,
     ];
 }

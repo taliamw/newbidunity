@@ -86,6 +86,9 @@ return [
     | subdomain under which all of the Fortify routes will be available.
     |
     */
+    'response' => [
+    'login' => \App\Http\Responses\LoginResponse::class,
+],
 
     'prefix' => '',
 

@@ -47,7 +47,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/contributions', [ContributionController::class, 'store'])->name('contributions.store');
     
     // Route::get('/products', [ProductController::class, 'index'])->name('products');
-    Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+    // Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 
     Route::get('/test', function () {
         return 'Route is working';

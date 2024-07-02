@@ -46,15 +46,17 @@
   <header id="header" class="header fixed-top d-flex align-items-center">
     <div class="container d-flex align-items-center justify-content-between">
 
-      <a href="home.php" class="logo d-flex align-items-center me-auto me-lg-0">
+      <a href="/" class="logo d-flex align-items-center me-auto me-lg-0">
         <!-- Uncomment the line below if you also wish to use an image logo -->
         <!-- <img src="assets/img/logo.png" alt=""> -->
         <h1>BidUnity<span>.</span></h1>
       </a>
+      
 
       <nav id="navbar" class="navbar">
         <ul>
-          <li><a href="/home">Home</a></li>
+          <li><a href="/">Home</a></li>
+          <li><a href="/products">Products</a></li>
          
         </ul>
       </nav><!-- .navbar -->
@@ -66,7 +68,7 @@
                         
                         <a class="btn-book-a-table" href="{{ url('/admin') }}" class="text-sm text-gray-700 underline">Admin Home</a>
 
-                        <a class="btn-book-a-table" href="{{ url('/lock-screen') }}" class="text-sm text-gray-700 underline">Lock your screen</a>
+                        <!-- <a class="btn-book-a-table" href="{{ url('/lock-screen') }}" class="text-sm text-gray-700 underline">Lock your screen</a> -->
                     @else
                         <a class="btn-book-a-table" href="{{ route('login') }}" class="text-sm text-gray-700 underline">Log in</a>
 
