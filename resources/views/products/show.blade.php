@@ -7,10 +7,11 @@
     <div class="row">
         <div class="col-md-6 mb-4">
             @if($product->image)
-            <img class="img-fluid rounded" src="{{ asset($product->image) }}" alt="{{ $product->name }}">
+            <img src="{{ URL('images\products\company.jpg') }}" class="card-img-top" alt="">
             @else
             <div class="bg-light d-flex align-items-center justify-content-center rounded" style="height: 300px;">
-                <span>No Image Available</span>
+                <span>  <img src="{{ URL('images\products\company.jpg') }}" class="card-img-top" alt="">
+</span>
             </div>
             @endif
         </div>
@@ -31,17 +32,21 @@
             </h4>
 
             {{-- Wishlist Form --}}
-            @if(auth()->user()->wishlist && auth()->user()->wishlist->contains($product->id))
-            <form action="{{ route('wishlist.remove', $product) }}" method="POST">
-                @csrf
-                <button type="submit" class="btn btn-danger">Remove from Wishlist</button>
-            </form>
+            @auth
+                @if(auth()->user()->wishlist && auth()->user()->wishlist->contains($product->id))
+                <form action="{{ route('wishlist.remove', $product) }}" method="POST">
+                    @csrf
+                    <button type="submit" class="btn btn-danger">Remove from Wishlist</button>
+                </form>
+                @else
+                <form action="{{ route('wishlist.add', $product) }}" method="POST">
+                    @csrf
+                    <button type="submit" class="btn btn-primary">Add to Wishlist</button>
+                </form>
+                @endif
             @else
-            <form action="{{ route('wishlist.add', $product) }}" method="POST">
-                @csrf
-                <button type="submit" class="btn btn-primary">Add to Wishlist</button>
-            </form>
-            @endif
+                <button type="button" class="btn btn-primary" onclick="alert('Please log in to add to wishlist')">Add to Wishlist</button>
+            @endauth
 
             {{-- Bid Form --}}
             <form action="{{ route('products.placeBid', $product) }}" method="POST" class="mt-3">
@@ -60,13 +65,15 @@
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     <span>{{ $bid->user->name }}</span>
                     <span>${{ number_format($bid->amount, 2) }}</span>
-                    @if(auth()->user()->id === $bid->user_id)
-                    <form action="{{ route('products.removeBid', $bid) }}" method="POST">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-sm btn-outline-danger">Remove Bid</button>
-                    </form>
-                    @endif
+                    @auth
+                        @if(auth()->user()->id === $bid->user_id)
+                        <form action="{{ route('products.removeBid', $bid) }}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Remove Bid</button>
+                        </form>
+                        @endif
+                    @endauth
                 </li>
                 @endforeach
             </ul>

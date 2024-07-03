@@ -17,10 +17,10 @@
         @forelse($products as $product)
         <div class="card border border-gray-200 rounded-lg shadow hover:shadow-lg transition-shadow duration-300">
             @if($product->image)
-                <img class="w-full h-48 object-cover rounded-t-lg" src="{{ $product->image }}" alt="{{ $product->name }}">
+            <img src="{{ URL('images\products\company.jpg') }}" class="card-img-top" alt="">
             @else
                 <div class="w-full h-48 bg-gray-200 flex items-center justify-center rounded-t-lg">
-                    <span>No Image Available</span>
+                    <span><img src="{{ URL('images\products\company.jpg') }}" class="card-img-top" alt=""></span>
                 </div>
             @endif
             <div class="p-4">
@@ -29,6 +29,7 @@
                 <h5 class="text-xl font-bold mt-2">${{ $product->price }}</h5>
             </div>
             <div class="p-4 bg-gray-100 flex justify-between items-center">
+                @auth
                 <form action="{{ route('wishlist.add', $product) }}" method="POST">
                     @csrf
                     <button type="submit" class="btn btn-primary">
@@ -39,6 +40,10 @@
                         @endif
                     </button>
                 </form>
+                @endauth
+                @guest
+                <button type="button" class="btn btn-primary" onclick="alert('Please log in to add to wishlist')">Add to Wishlist</button>
+                @endguest
                 <a href="{{ route('products.show', $product->id) }}" class="btn btn-secondary">View Details</a>
             </div>
         </div>
@@ -72,7 +77,7 @@
 
     <!-- Navigation -->
     <div class="mt-6">
-        {{ $products->appends(request()->input())->links() }}
+        {{ $products->links() }}
     </div>
 </div>
 @endsection

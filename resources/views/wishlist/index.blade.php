@@ -9,7 +9,7 @@
         <div class="col-md-4 mb-4">
         <div class="card h-100">
     @if($item->image)
-    <img class="card-img-top" src="{{ $item->image }}" alt="{{ $item->name }}">
+    <img src="{{ URL('images\products\company.jpg') }}" class="card-img-top" alt="">
     @else
     <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
         <span>No Image Available</span>
