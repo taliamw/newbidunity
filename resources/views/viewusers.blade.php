@@ -13,6 +13,7 @@
                         <th>Name</th>
                         <th>Email</th>
                         <th>Role</th>
+                        <!-- <th>Registered By</th> -->
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -22,6 +23,7 @@
                             <td>{{ $user->name }}</td>
                             <td>{{ $user->email }}</td>
                             <td>{{ $user->role }}</td>
+                            <!-- <td>{{ $user->registeredBy ? $user->registeredBy->name : 'self' }}</td> -->
                             <td>
                                 <!-- Delete Button -->
                                 <form action="{{ route('viewusers.destroy', $user->id) }}" method="POST" style="display: inline;">

@@ -13,12 +13,11 @@
                     <div class="card">
                         <div class="card-body">
                             <h4 class="card-title">Admin vs Users</h4>
-                            <canvas id="adminUserChart" style="height:230px"></canvas>
+                            <canvas id="adminUserChart" style="height:230px; width: 100%;"></canvas>
                         </div><br><br><br>
                         <a href="{{ route('export.table.pdf') }}" class="btn btn-primary">Download PDF</a>
                     </div>
                 </div>
-                
             </div>
         </div>
     </div>
@@ -38,6 +37,7 @@
         fetch('/api/users-admins-count')
             .then(response => response.json())
             .then(data => {
+                console.log('Fetched data:', data); // Add this line for debugging
                 const ctx = document.getElementById('adminUserChart').getContext('2d');
                 new Chart(ctx, {
                     type: 'bar',
@@ -69,5 +69,4 @@
             .catch(error => console.error('Error fetching data:', error));
     });
 </script>
-
 @endsection

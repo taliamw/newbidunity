@@ -3,7 +3,9 @@
 @section('content')
 
 <br><br><br><br><br>
-<h2>Create an admin</h2>
+<div class="container mt-5">
+
+<h2>Create an admin</h2><br>
 <!-- Create User Form -->
 <form action="{{ route('viewusers.store') }}" method="POST">
     @csrf
@@ -15,7 +17,7 @@
     <br><br>
     <input type="hidden" name="role" value="admin">
     <br>
-    <button type="submit" class="btn btn-success">Create Admin</button>
+    <button type="submit" class="btn btn-primary">Create Admin</button><br>
 </form>
-
+</div>
 @endsection

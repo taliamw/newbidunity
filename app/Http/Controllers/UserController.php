@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 use App\Models\User;
-
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -18,12 +18,14 @@ class UserController extends Controller
     {
 $this->authorize("viewAny", User::class);
 $users = User::all();
+
         return view('admin.adminhome', );
     }
     public function viewUsers()
     {
         // Fetch users data and display in 'viewusers.blade.php'
         $users = User::all();
+        $users = User::with('registeredBy')->get();
         return view('viewusers', compact('users'));
     }
     // Show the form for creating a new user
@@ -45,8 +47,13 @@ $users = User::all();
          // Check if the request is for admin registration
          $role = $request->input('role') == 'admin' ? 'admin' : 'user';
 
+         $registeredBy = Auth::id();
+
          // Create the user with the appropriate role
-         User::create(array_merge($validatedData, ['role' => $role]));
+         User::create(array_merge($validatedData, [
+            'role' => $role,
+            'registered_by' => $registeredBy,
+        ]));
  
          return redirect()->route('viewusers')
              ->with('success', 'User created successfully');
@@ -58,6 +65,7 @@ $users = User::all();
     // Display the specified user
     public function show(User $user)
     {
+        
         return view('admin.showuser', compact('user'));
     }
 
@@ -90,6 +98,7 @@ $users = User::all();
         return redirect()->route('viewusers')
             ->with('success', 'User deleted successfully');
     }
+
 public function loadChartJsPage(){
     return view("admin.chartjs-page");
 }

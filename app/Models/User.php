@@ -98,4 +98,10 @@ public function wishlist()
     return $this->belongsToMany(NewProduct::class, 'user_wishlists', 'user_id', 'new_product_id');
 }
 
+public function registeredBy()
+{
+    return $this->belongsTo(User::class, 'registered_by');
+}
+
+
 }
