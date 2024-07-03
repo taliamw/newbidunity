@@ -9,6 +9,8 @@ class NewProduct extends Model
 {
     use HasFactory;
 
+    protected $table = 'new_products';
+
     protected $fillable = ['name', 'description', 'price', 'image', 'auction_status'];
 
     public function bids()

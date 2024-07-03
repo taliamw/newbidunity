@@ -59,6 +59,7 @@
                         <p class="text-gray-600">This is a description of placeholder product {{ $i }}.</p>
                         <h5 class="text-xl font-bold mt-2">$99.99</h5>
                     </div>
+            
                     <div class="p-4 bg-gray-100">
                         <a href="#" class="btn btn-primary w-full">View Details</a>
                     </div>

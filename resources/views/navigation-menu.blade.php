@@ -52,11 +52,18 @@
                                         </x-dropdown-link>
                                     @endif
 
-                                    <div class="border-t border-gray-200"></div>
 
-                                    <!-- Team Switcher -->
-                                    <!-- Add team switching logic here if necessary -->
-                                </div>
+
+                                    <div class="border-t border-gray-200"></div>
+                                    <div class="block px-4 py-2 text-xs text-gray-400">
+                                        {{ __('Your Teams') }}
+                                    </div>
+
+                                    @foreach (Auth::user()->allTeams() as $team)
+                        <x-switchable-team :team="$team" />
+                        <div class="border-t border-gray-200"></div>
+
+                    @endforeach                                </div>
                             </x-slot>
                         </x-dropdown>
                     </div>
@@ -192,6 +199,9 @@
                         @else
                             <div class="text-red-500">No current team</div>
                         @endif
+                        @foreach (Auth::user()->allTeams() as $team)
+                        <x-switchable-team :team="$team" />
+                    @endforeach
                     @endif
                 @else
                     <x-responsive-nav-link href="{{ route('login') }}">
