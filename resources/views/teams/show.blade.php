@@ -1,3 +1,4 @@
+<!-- resources/views/team/contributions.blade.php -->
 <x-guest-layout>
     <x-authentication-card>
         <x-slot name="logo">
@@ -57,8 +58,8 @@
                     <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                         Contribute
                     </button>
-                    <button  class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                    <a href="{{ route('payment') }}">Make payment</a>
+                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        <a href="{{ route('payment', ['amount' => $userContribution['amount']]) }}">Make payment</a>
                     </button>
                 </form>
             </div>

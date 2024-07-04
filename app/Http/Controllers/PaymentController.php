@@ -4,9 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Stripe\Stripe;
 use Stripe\PaymentIntent;
 use Stripe\Exception\ApiErrorException;
+use App\Models\Payment;
 
 class PaymentController extends Controller
 {
@@ -21,16 +23,25 @@ class PaymentController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function showPaymentForm()
+    public function showPaymentForm(Request $request)
     {
-        $intent = PaymentIntent::create([
-            'amount' => 1099, // Amount in cents
-            'currency' => 'usd',
-        ]);
+        $amount = intval($request->input('amount') * 100);
 
-        return view('payment', [
-            'clientSecret' => $intent->client_secret,
-        ]);
+        try {
+            // Create a PaymentIntent for immediate payment
+            $intent = PaymentIntent::create([
+                'amount' => $amount,
+                'currency' => 'usd',
+                'payment_method_types' => ['card'],
+            ]);
+
+            return view('payment', [
+                'clientSecret' => $intent->client_secret,
+                'amount' => $request->input('amount'),
+            ]);
+        } catch (ApiErrorException $e) {
+            return back()->withErrors(['error' => $e->getMessage()]);
+        }       
     }
 
     /**
@@ -39,21 +50,44 @@ class PaymentController extends Controller
      * @param  Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
+    // PaymentController.php
+
     public function handlePayment(Request $request)
     {
         $request->validate([
             'payment_method_id' => 'required|string',
+            'amount' => 'required|numeric',
+            'setup_intent_client_secret' => 'required|string',
         ]);
-
+    
         try {
-            $paymentIntent = PaymentIntent::retrieve($request->payment_intent_id);
+            // Retrieve the PaymentIntent using client secret
+            $paymentIntent = PaymentIntent::retrieve($request->setup_intent_client_secret);
+
+            // Confirm the PaymentIntent with the payment method
             $paymentIntent->confirm([
                 'payment_method' => $request->payment_method_id,
             ]);
 
+            // Save the payment details in the database
+            $payment = new Payment();
+            $payment->user_id = Auth::id();
+            $payment->amount = $request->amount;
+            $payment->stripe_payment_intent_id = $paymentIntent->id;
+            $payment->status = $paymentIntent->status;
+            DB::transaction(function () use ($payment) {
+                $payment->save();
+            });
+            Log::info('Payment saved successfully.');
+
             return response()->json(['success' => true]);
         } catch (ApiErrorException $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+            Log::error('Error confirming PaymentIntent: ' . $e->getMessage());
+            return response()->json(['error' => 'Failed to confirm payment.'], 500);
+        } catch (\Exception $e) {
+            Log::error('Error saving payment: ' . $e->getMessage());
+            return response()->json(['error' => 'Failed to save payment.'], 500);
         }
     }
 }
+    
