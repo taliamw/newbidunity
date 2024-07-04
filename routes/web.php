@@ -10,6 +10,7 @@ use App\Http\Controllers\TeamController;
 use App\Http\Controllers\ContributionController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\WishlistController;
+use App\Http\Controllers\AdminListingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,6 +55,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
     Route::get('/payment', [PaymentController::class, 'showPaymentForm'])->name('payment');
     Route::post('/handle-payment', [PaymentController::class, 'handlePayment'])->name('payment.handle');
+
+    Route::middleware('can:admin')->group(function () {
+        Route::get('/admin/listings', [AdminListingController::class, 'index'])->name('listing_management');
+        Route::put('/admin/listings/{product}/approve', [AdminListingController::class, 'approve'])->name('admin.listings.approve');
+        Route::put('/admin/listings/{product}/reject', [AdminListingController::class, 'reject'])->name('admin.listings.reject');
+    });
 });
 
 //public routes

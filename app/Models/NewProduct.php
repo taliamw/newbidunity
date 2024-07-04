@@ -11,7 +11,7 @@ class NewProduct extends Model
 
     protected $table = 'new_products';
 
-    protected $fillable = ['name', 'description', 'price', 'image', 'auction_status', 'duration'];
+    protected $fillable = ['name', 'description', 'price', 'image', 'auction_status', 'duration', 'status'];
 
 
     public function bids()
