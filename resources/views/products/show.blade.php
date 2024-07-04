@@ -7,11 +7,10 @@
     <div class="row">
         <div class="col-md-6 mb-4">
             @if($product->image)
-            <img src="{{ URL('images\products\company.jpg') }}" class="card-img-top" alt="">
+            <img src="{{ asset('storage/' . $product->image) }}" class="card-img-top" alt="">
             @else
             <div class="bg-light d-flex align-items-center justify-content-center rounded" style="height: 300px;">
-                <span>  <img src="{{ URL('images\products\company.jpg') }}" class="card-img-top" alt="">
-</span>
+                <span>No Image Available</span>
             </div>
             @endif
         </div>
@@ -19,10 +18,10 @@
             <h3 class="my-3">${{ number_format($product->price, 2) }}</h3>
             <p>{{ $product->description }}</p>
 
+            {{-- Display Remaining Time --}}
+            <h4 class="my-3">Auction Ends In: <span id="countdown-{{ $product->id }}" class="badge badge-info"></span></h4>
+
             {{-- Determine Auction Status --}}
-            @php
-                $highestBid = $product->bids()->orderBy('amount', 'desc')->first();
-            @endphp
             <h4 class="my-3">Auction Status:
                 @if($highestBid)
                     <span class="badge badge-info">Highest Bid: ${{ number_format($highestBid->amount, 2) }}</span>
@@ -49,6 +48,7 @@
             @endauth
 
             {{-- Bid Form --}}
+            @if($isAuctionActive)
             <form action="{{ route('products.placeBid', $product) }}" method="POST" class="mt-3">
                 @csrf
                 <div class="form-group">
@@ -57,6 +57,9 @@
                 </div>
                 <button type="submit" class="btn btn-primary">Place Bid</button>
             </form>
+            @else
+            <div class="alert alert-warning mt-3">Auction has ended. No more bids can be placed.</div>
+            @endif
 
             {{-- Bids List --}}
             <h4 class="my-3">Bids</h4>
@@ -79,13 +82,40 @@
             </ul>
 
             {{-- Winning Bid --}}
-            @if($winningBid)
+            @if(!$isAuctionActive && $highestBid)
             <div class="mt-4">
                 <h4>Winning Bid</h4>
-                <p>{{ $winningBid->user->name }} - ${{ number_format($winningBid->amount, 2) }}</p>
+                <p>{{ $highestBid->user->name }} - ${{ number_format($highestBid->amount, 2) }}</p>
             </div>
             @endif
         </div>
     </div>
 </div>
+
+{{-- Include Countdown Script --}}
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        var endTime = new Date('{{ $product->getEndTime() }}').getTime();
+        var countdownElement = document.getElementById('countdown-{{ $product->id }}');
+
+        function updateCountdown() {
+            var now = new Date().getTime();
+            var distance = endTime - now;
+
+            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            countdownElement.innerHTML = days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
+
+            if (distance < 0) {
+                clearInterval(countdownInterval);
+                countdownElement.innerHTML = "EXPIRED";
+            }
+        }
+
+        var countdownInterval = setInterval(updateCountdown, 1000);
+    });
+</script>
 @endsection

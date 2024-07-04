@@ -4,6 +4,13 @@
 <div class="container mx-auto px-4">
     <h1 class="text-2xl font-bold my-4">Products</h1>
 
+    <!-- Create Product Button -->
+    @auth
+    <div class="flex justify-end mb-4">
+        <button class="btn btn-primary" data-toggle="modal" data-target="#createProductModal">Add Product</button>
+    </div>
+    @endauth
+
     <!-- Search bar -->
     <div class="flex mb-4">
         <form action="{{ route('products.index') }}" method="GET" class="flex w-full">
@@ -16,13 +23,14 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         @forelse($products as $product)
         <div class="card border border-gray-200 rounded-lg shadow hover:shadow-lg transition-shadow duration-300">
-            @if($product->image)
-            <img src="{{ URL('images\products\company.jpg') }}" class="card-img-top" alt="">
-            @else
-                <div class="w-full h-48 bg-gray-200 flex items-center justify-center rounded-t-lg">
-                    <span><img src="{{ URL('images\products\company.jpg') }}" class="card-img-top" alt=""></span>
-                </div>
-            @endif
+        @if($product->image)
+    <img src="{{ asset('storage/' . $product->image) }}" class="card-img-top" alt="">
+@else
+    <div class="w-full h-48 bg-gray-200 flex items-center justify-center rounded-t-lg">
+        <span>No Image Available</span>
+    </div>
+@endif
+
             <div class="p-4">
                 <h4 class="text-lg font-semibold">{{ $product->name }}</h4>
                 <p class="text-gray-600">{{ $product->description }}</p>
@@ -78,6 +86,49 @@
     <!-- Navigation -->
     <div class="mt-6">
         {{ $products->links() }}
+    </div>
+</div>
+
+<!-- Create Product Modal -->
+<div class="modal fade" id="createProductModal" tabindex="-1" role="dialog" aria-labelledby="createProductModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="createProductModalLabel">Add New Product</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="name">Product Name</label>
+                        <input type="text" name="name" class="form-control" id="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="description">Description</label>
+                        <textarea name="description" class="form-control" id="description" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="price">Price</label>
+                        <input type="number" name="price" class="form-control" id="price" step="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="image">Image</label>
+                        <input type="file" name="image" class="form-control-file" id="image" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="duration">Duration (days)</label>
+                        <input type="number" name="duration" class="form-control" id="duration" min="1" required>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Add Product</button>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
 @endsection
