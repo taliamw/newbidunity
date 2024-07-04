@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -23,8 +24,12 @@ class Team extends Model
     }
 
     public function contributions()
-{
-    return $this->hasMany(Contribution::class);
-}
+    {
+        return $this->hasMany(Contribution::class);
+    }
 
+    public function notifyOwner($user, $product, $amount)
+    {
+        $this->owner->notify(new \App\Notifications\BidApprovalRequest($user, $product, $amount));
+    }
 }

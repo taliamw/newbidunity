@@ -55,10 +55,22 @@
                     <label for="amount">Place your bid:</label>
                     <input type="number" name="amount" class="form-control" id="amount" step="0.01" min="0.01" required>
                 </div>
+                <div class="form-group">
+                    <label for="bid_type">Bid Type:</label>
+                    <select name="bid_type" class="form-control" id="bid_type" required>
+                        <option value="individual">Individual</option>
+                        <option value="team">Team</option>
+                    </select>
+                </div>
                 <button type="submit" class="btn btn-primary">Place Bid</button>
             </form>
             @else
             <div class="alert alert-warning mt-3">Auction has ended. No more bids can be placed.</div>
+            @endif
+
+            {{-- Display Error Message --}}
+            @if(session('error'))
+            <div class="alert alert-danger mt-3">{{ session('error') }}</div>
             @endif
 
             {{-- Bids List --}}
@@ -80,42 +92,35 @@
                 </li>
                 @endforeach
             </ul>
-
-            {{-- Winning Bid --}}
-            @if(!$isAuctionActive && $highestBid)
-            <div class="mt-4">
-                <h4>Winning Bid</h4>
-                <p>{{ $highestBid->user->name }} - ${{ number_format($highestBid->amount, 2) }}</p>
-            </div>
-            @endif
         </div>
     </div>
 </div>
 
-{{-- Include Countdown Script --}}
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        var endTime = new Date('{{ $product->getEndTime() }}').getTime();
-        var countdownElement = document.getElementById('countdown-{{ $product->id }}');
+    document.addEventListener('DOMContentLoaded', (event) => {
+        const endTime = new Date("{{ $remainingTime }}").getTime();
+        const countdownElement = document.getElementById('countdown-{{ $product->id }}');
 
-        function updateCountdown() {
-            var now = new Date().getTime();
-            var distance = endTime - now;
+        const updateCountdown = () => {
+            const now = new Date().getTime();
+            const distance = endTime - now;
 
-            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-            countdownElement.innerHTML = days + "d " + hours + "h " + minutes + "m " + seconds + "s ";
-
-            if (distance < 0) {
-                clearInterval(countdownInterval);
-                countdownElement.innerHTML = "EXPIRED";
+            if (distance <= 0) {
+                countdownElement.innerHTML = "Auction Ended";
+                return;
             }
-        }
 
-        var countdownInterval = setInterval(updateCountdown, 1000);
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            countdownElement.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+        };
+
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
     });
 </script>
+
 @endsection
