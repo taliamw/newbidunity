@@ -1,3 +1,4 @@
+<!-- payment.form.blade.php -->
 <x-guest-layout>
     <x-authentication-card>
         <x-slot name="logo">
@@ -6,9 +7,9 @@
 
         <x-validation-errors class="mb-4" />
 
-        <form id="payment-form" method="POST" action="{{ route('payment.handle') }}">
+        <form id="payment-form" action="{{ route('payment.handle') }}" method="POST">
             @csrf
-
+            <input type="hidden" id="client_secret" name="client_secret" value="{{ $clientSecret }}">
             <div>
                 <x-label for="name" value="{{ __('Name on Card') }}" />
                 <x-input id="name" class="block mt-1 w-full" type="text" name="name" required autofocus />
@@ -20,23 +21,16 @@
                 <div id="card-errors" class="mt-2 text-sm text-red-600"></div><br>
             </div>
 
-            <input type="hidden" name="setup_intent_client_secret" value="{{ $clientSecret }}" />
-<br>
-
             <div>
-                <x-button id="submit" class="ml-4">
+                <x-button id="submit">
                     {{ __('Submit Payment') }}
                 </x-button>
             </div>
         </form>
+
         <div class="flex items-center justify-end mt-4">
             <a href="{{ route('dashboard') }}" class="ml-4 text-sm text-gray-600 underline">Back to Dashboard</a>
         </div>
-        <br>
-        <div class="border-t border-gray-200"></div>
-        <div class="mt-4 text-center">
-                    <p class="text-sm text-gray-500">Powered by Stripe</p>
-                </div>
     </x-authentication-card>
 
     <script src="https://js.stripe.com/v3/"></script>
@@ -51,47 +45,26 @@
             const handleSubmit = async (event) => {
                 event.preventDefault();
 
-                const formData = new FormData(event.target);
-
-                const { setupIntent, error } = await stripe.confirmCardSetup(
-                    formData.get('setup_intent_client_secret'), 
+                const { paymentIntent, error } = await stripe.confirmCardPayment(
+                    document.getElementById('client_secret').value,
                     {
                         payment_method: {
                             card: cardElement,
                             billing_details: {
-                                name: formData.get('name'),
-                            },
-                        },
+                                name: document.getElementById('name').value
+                            }
+                        }
                     }
                 );
 
                 if (error) {
-                    console.error('Failed to confirm card setup:', error);
+                    console.error('Failed to confirm card payment:', error);
                     const errorElement = document.getElementById('card-errors');
                     errorElement.textContent = error.message;
                 } else {
-                    console.log('SetupIntent successful:', setupIntent);
-
-                    const response = await fetch('/handle-payment', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-                        },
-                        body: JSON.stringify({
-                            setup_intent_client_secret: setupIntent.client_secret,
-                        }),
-                    });
-
-                    const responseData = await response.json();
-                    if (response.ok) {
-                        console.log('Payment confirmed on server:', responseData);
-                        alert('success')
-                        redirect
-                    } else {
-                        console.error('Failed to confirm payment on server:', responseData.error);
-                        alert('Failed to confirm payment.')
-                    }
+                    console.log('Payment confirmed successfully:', paymentIntent);
+                    alert('Payment successful!');
+                    window.location.href = '{{ route('dashboard') }}'; // Redirect to dashboard after successful payment
                 }
             };
 
