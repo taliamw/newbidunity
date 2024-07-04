@@ -105,6 +105,14 @@
         </a>
       </li>
       <li class="nav-item menu-items">
+        <a class="nav-link" href="/admin/listings">
+          <span class="menu-icon">
+            <i class="mdi mdi-chart-bar"></i>
+          </span>
+          <span class="menu-title">Publish listing</span>
+        </a>
+      </li>
+      <li class="nav-item menu-items">
         <a class="nav-link" href="/reports/user-report">
           <span class="menu-icon">
             <i class="mdi mdi-file-document-box"></i>
