@@ -73,14 +73,4 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->belongsTo(User::class, 'registered_by');
     }
-public function registeredBy()
-{
-    return $this->belongsTo(User::class, 'registered_by');
-}
-
-public function listings()
-{
-    return $this->hasMany(NewProduct::class);
-}
-
 }

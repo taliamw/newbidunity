@@ -13,7 +13,7 @@ class ProductController extends Controller
     {
         $search = $request->input('search');
         
-        $query = NewProduct::query()->where('status', 'approved');
+        $query = NewProduct::query();
 
         if ($search) {
             $query->where('name', 'like', "%{$search}%")
@@ -31,13 +31,6 @@ class ProductController extends Controller
         $highestBid = $bids->first();
         $isAuctionActive = $product->isAuctionActive();
         $remainingTime = $product->getEndTime();
-
-public function show(NewProduct $product)
-{
-    $bids = $product->bids()->orderBy('amount', 'desc')->get();
-    $highestBid = $bids->first();
-    $isAuctionActive = $product->isAuctionActive();
-    $remainingTime = $product->getEndTime();
 
         return view('products.show', compact('product', 'bids', 'highestBid', 'isAuctionActive', 'remainingTime'));
     }
@@ -132,23 +125,7 @@ public function show(NewProduct $product)
             'auction_status' => 'active',
             'end_time' => now()->addMinutes($duration),
         ]);
-    // Create a new product and save it in the database
-    NewProduct::create([
-        'name' => $request->name,
-        'description' => $request->description,
-        'price' => $request->price,
-        'image' => $imagePath, // Store the image path
-        'auction_status' => 'active', // Set default auction status
-        'duration' => $request->duration,
-        'status' => 'pending,'
-    ]);
 
         return redirect()->route('products.index')->with('success', 'Product added successfully.');
     }
-    // Redirect back to the products page with a success message
-    return redirect()->route('products.index')->with('success', 'Product submitted for review.');
-}
-
-    
-
 }
