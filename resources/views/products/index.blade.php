@@ -8,6 +8,8 @@
     @auth
     <div class="flex justify-end mb-4">
         <button class="btn btn-primary" data-toggle="modal" data-target="#createProductModal">Add Product</button>
+        <a href="{{ route('wishlist.index') }}" class="btn btn-primary ms-2">My Wishlist</a> <!-- Link to go to the wishlist page -->
+
     </div>
     @endauth
 
@@ -23,8 +25,9 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         @forelse($products as $product)
         <div class="card border border-gray-200 rounded-lg shadow hover:shadow-lg transition-shadow duration-300">
+       
         @if($product->image)
-    <img src="{{ asset('storage/' . $product->image) }}" class="card-img-top" alt="">
+    <img src="{{ $product->image }}" class="card-img-top" alt="">
 @else
     <div class="w-full h-48 bg-gray-200 flex items-center justify-center rounded-t-lg">
         <span>No Image Available</span>

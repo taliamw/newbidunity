@@ -23,10 +23,9 @@ class NewProduct extends Model
     {
         return $this->belongsToMany(User::class, 'user_wishlists', 'new_product_id', 'user_id');
     }
-    public function getImageAttribute()
+    public function getImageAttribute($value)
     {
-        // Assuming image is stored as base64 in the database
-        return base64_encode($this->attributes['image']); // Adjust based on your actual attribute name
+        return asset('storage/' . $value);
     }
    public function isAuctionActive()
     {
@@ -38,5 +37,11 @@ class NewProduct extends Model
     {
         return $this->created_at->addDays($this->duration)->toDateTimeString();
     }
+
+    public function listings()
+{
+    return $this->hasMany(NewProduct::class);
+}
+
 }
 

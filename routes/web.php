@@ -126,6 +126,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('sign_in');
     Route::get('/payment-details', [PaymentDetailsController::class, 'edit'])->name('payment-details.edit');
     Route::put('/payment-details', [PaymentDetailsController::class, 'update'])->name('payment-details.update');
+    Route::post('/products/{product}/bid', [ProductController::class, 'placeBid'])->name('products.placeBid');
+
 });
 // Route::get('/products', [ProductController::class, 'index'])->name('products');
 // Route::get('/products', [ProductController::class, 'index'])->name('products.index');
@@ -134,7 +136,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
  // Product Routes
  Route::get('/products', [ProductController::class, 'index'])->name('products.index');
  Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
- Route::post('/products/{product}/bid', [ProductController::class, 'placeBid'])->name('products.placeBid');
  Route::get('/products/{product}/winner', [ProductController::class, 'determineWinner'])->name('products.determineWinner');
  Route::delete('/products/{bid}/remove-bid', 'ProductController@removeBid')->name('products.removeBid');
  Route::delete('/bids/{bid}', [ProductController::class, 'removeBid'])->name('products.removeBid');

@@ -85,7 +85,6 @@
                         <th>Title</th>
                         <th>Description</th>
                         <th>Price</th>
-                        <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -93,9 +92,7 @@
                         <tr>
                             <td>{{ $product->name }}</td>
                             <td>{{ $product->description }}</td>
-                            <td>{{ $product->price }}</td>
-                            <td>{{ $product->auction_status }}</td>
-                            
+                            <td>{{ $product->price }}</td>                            
                         </tr>
                     @endforeach
                 </tbody>

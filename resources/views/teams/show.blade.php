@@ -58,9 +58,15 @@
                     <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                         Contribute
                     </button>
-                    <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                        <a href="{{ route('payment', ['amount' => $userContribution['amount']]) }}">Make payment</a>
+                    @php
+                     $contributionAmount = $userContribution['amount'] ?? 0;
+                     @endphp
+                     <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        <a href="{{ route('payment', ['amount' => $contributionAmount]) }}">Make payment</a>
                     </button>
+                    @if($contributionAmount == 0)
+                    <p>Please set your contribution amount before making a payment.</p>
+                    @endif
                 </form>
             </div>
         </div>
