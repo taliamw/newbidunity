@@ -50,16 +50,13 @@ class PaymentController extends Controller
      * @param  Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
-    // PaymentController.php
-
     public function handlePayment(Request $request)
     {
         $request->validate([
-            'payment_method_id' => 'required|string',
-            'amount' => 'required|numeric',
+            'name' => 'required|string',
             'setup_intent_client_secret' => 'required|string',
         ]);
-    
+
         try {
             // Retrieve the PaymentIntent using client secret
             $paymentIntent = PaymentIntent::retrieve($request->setup_intent_client_secret);
@@ -71,16 +68,15 @@ class PaymentController extends Controller
 
             // Save the payment details in the database
             $payment = new Payment();
-            $payment->user_id = Auth::id();
-            $payment->amount = $request->amount;
+            $payment->user_id = auth()->id(); // Assuming user is authenticated
+            $payment->amount = $paymentIntent->amount / 100; // Convert back to dollars
             $payment->stripe_payment_intent_id = $paymentIntent->id;
             $payment->status = $paymentIntent->status;
-            DB::transaction(function () use ($payment) {
-                $payment->save();
-            });
-            Log::info('Payment saved successfully.');
 
-            return response()->json(['success' => true]);
+            $payment->save();
+
+            return redirect()->route('allocation.report.pdf',);
+            
         } catch (ApiErrorException $e) {
             Log::error('Error confirming PaymentIntent: ' . $e->getMessage());
             return response()->json(['error' => 'Failed to confirm payment.'], 500);
@@ -90,4 +86,4 @@ class PaymentController extends Controller
         }
     }
 }
-    
+

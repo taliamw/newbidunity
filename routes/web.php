@@ -11,6 +11,7 @@ use App\Http\Controllers\ContributionController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\AdminListingController;
+use App\Http\Controllers\ReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -145,3 +146,22 @@ Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.in
 Route::resource('products', ProductController::class);
 Route::post('/bids/{bid}/approve', [ProductController::class, 'approveBid'])->name('bids.approve');
 Route::post('/bids/{bid}/deny', [ProductController::class, 'denyBid'])->name('bids.deny');
+
+
+Route::get('/test-payment', function () {
+    $payment = new \App\Models\Payment();
+    $payment->user_id = 9; // Replace with a valid user ID
+    $payment->amount = 100.00;
+    $payment->stripe_payment_intent_id = 'test_intent_id';
+    $payment->status = 'succeeded';
+    $payment->save();
+
+    return 'Payment saved successfully!';
+});
+
+Route::get('allocation/report/{team}', [ReportController::class, 'generate'])->name('allocation.report.pdf');
+
+
+
+
+
