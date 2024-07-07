@@ -62,6 +62,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::put('/admin/listings/{product}/approve', [AdminListingController::class, 'approve'])->name('admin.listings.approve');
         Route::put('/admin/listings/{product}/reject', [AdminListingController::class, 'reject'])->name('admin.listings.reject');
     });
+
+    Route::get('/admin/products/{listing}/edit', [AdminListingController::class, 'edit'])->name('admin.products.edit');
+    Route::put('/admin/products/{listing}', [AdminListingController::class, 'update'])->name('admin.products.update');
+    Route::delete('/admin/products/{listing}', [AdminListingController::class, 'destroy'])->name('admin.products.destroy');
 });
 
 //public routes
@@ -160,8 +164,6 @@ Route::get('/test-payment', function () {
 });
 
 Route::get('allocation/report/{team}', [ReportController::class, 'generate'])->name('allocation.report.pdf');
-
-
 
 
 

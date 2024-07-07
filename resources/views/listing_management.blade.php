@@ -56,6 +56,7 @@
                         <th>Description</th>
                         <th>Price</th>
                         <th>Status</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -65,6 +66,14 @@
                             <td>{{ $product->description }}</td>
                             <td>{{ $product->price }}</td>
                             <td>{{ $product->auction_status }}</td>
+                            <td>
+                    <a href="{{ route('admin.products.edit', $product->id) }}" class="btn btn-warning">Edit</a>
+                    <form action="{{ route('admin.products.destroy', $product->id) }}" method="POST" style="display:inline-block;">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this listing?')">Delete</button>
+                    </form>
+                </td>
                             
                         </tr>
                     @endforeach
