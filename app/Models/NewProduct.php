@@ -43,8 +43,25 @@ class NewProduct extends Model
     
     
     public function getEndTimeAttribute($value)
+    public function getImageAttribute($value)
+    {
+        return asset('storage/' . $value);
+    }
+   public function isAuctionActive()
+    {
+        $endDate = $this->created_at->addDays($this->duration);
+        return Carbon::now()->lt($endDate);
+    }
+
+    public function getEndTime()
     {
         return Carbon::parse($value);
     }
     
+
+    public function listings()
+{
+    return $this->hasMany(NewProduct::class);
+}
+
 }

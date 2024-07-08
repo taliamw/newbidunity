@@ -8,6 +8,8 @@
     @auth
     <div class="flex justify-end mb-4">
         <button class="btn btn-primary" data-toggle="modal" data-target="#createProductModal">Add Product</button>
+        <a href="{{ route('wishlist.index') }}" class="btn btn-primary ms-2">My Wishlist</a> <!-- Link to go to the wishlist page -->
+
     </div>
     @endauth
 
@@ -23,8 +25,9 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         @forelse($products as $product)
         <div class="card border border-gray-200 rounded-lg shadow hover:shadow-lg transition-shadow duration-300">
+       
         @if($product->image)
-    <img src="{{ asset('storage/' . $product->image) }}" class="card-img-top" alt="">
+    <img src="{{ $product->image }}" class="card-img-top" alt="">
 @else
     <div class="w-full h-48 bg-gray-200 flex items-center justify-center rounded-t-lg">
         <span>No Image Available</span>
@@ -100,34 +103,36 @@
                 </button>
             </div>
             <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="name">Product Name</label>
-                        <input type="text" name="name" class="form-control" id="name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="description">Description</label>
-                        <textarea name="description" class="form-control" id="description" required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="price">Price</label>
-                        <input type="number" name="price" class="form-control" id="price" step="0.01" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="image">Image</label>
-                        <input type="file" name="image" class="form-control-file" id="image" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="duration">Duration (days)</label>
-                        <input type="number" name="duration" class="form-control" id="duration" min="1" required>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Add Product</button>
-                </div>
-            </form>
+    @csrf
+    <div class="modal-body">
+        <div class="form-group">
+            <label for="name">Product Name</label>
+            <input type="text" name="name" class="form-control" id="name" required>
+        </div>
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea name="description" class="form-control" id="description" required></textarea>
+        </div>
+        <div class="form-group">
+            <label for="price">Price</label>
+            <input type="number" name="price" class="form-control" id="price" step="0.01" required>
+        </div>
+        <div class="form-group">
+            <label for="image">Image</label>
+            <input type="file" name="image" class="form-control-file" id="image" required>
+        </div>
+        <div class="form-group">
+    <label for="duration">Duration (in Days)</label>
+    <input type="number" name="duration" class="form-control" id="duration" min="1" required>
+</div>
+
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Add Product</button>
+    </div>
+</form>
+
         </div>
     </div>
 </div>
