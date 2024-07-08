@@ -57,6 +57,8 @@
         <ul>
           <li><a href="/">Home</a></li>
           <li><a href="/products">Products</a></li>
+          <li><a href="/">About</a></li>
+
          
         </ul>
       </nav><!-- .navbar -->
@@ -66,7 +68,7 @@
                     @auth
                         <a class="btn-book-a-table" href="{{ url('/dashboard') }}" class="text-sm text-gray-700 underline">User Dashboard</a>
                         
-                        <a class="btn-book-a-table" href="{{ url('/admin') }}" class="text-sm text-gray-700 underline">Admin Home</a>
+                        <!-- <a class="btn-book-a-table" href="{{ url('/admin') }}" class="text-sm text-gray-700 underline">Admin Home</a> -->
 
                         <!-- <a class="btn-book-a-table" href="{{ url('/lock-screen') }}" class="text-sm text-gray-700 underline">Lock your screen</a> -->
                     @else

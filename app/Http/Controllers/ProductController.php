@@ -15,7 +15,7 @@ class ProductController extends Controller
     {
         $search = $request->input('search');
         
-        $query = NewProduct::query();
+        $query = NewProduct::query()->where('status', 'approved');;
 
         if ($search) {
             $query->where('name', 'like', "%{$search}%")
@@ -107,37 +107,37 @@ class ProductController extends Controller
     }
 
     public function store(Request $request)
-    {
-        // Validate the form input
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'price' => 'required|numeric|min:0',
-            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'duration_days' => 'required|integer|min:0',
-            'duration_hours' => 'required|integer|min:0|max:23',
-            'duration_minutes' => 'required|integer|min:0|max:59',
-        ]);
-    
-        // Handle the image file
-        $imagePath = $request->file('image')->store('products', 'public');
-    
-        // Calculate the auction end time
-        $duration = $request->input('duration_days') * 1440 + $request->input('duration_hours') * 60 + $request->input('duration_minutes');
-    
-        // Create a new product and save it in the database
-        $product = NewProduct::create([
-            'name' => $request->name,
-            'description' => $request->description,
-            'price' => $request->price,
-            'image' => $imagePath,
-            'auction_status' => 'active',
-            'duration' => $duration, // Store the duration
-            'status' => 'pending', // or any default status
-            'end_time' => now()->addDays($duration), // Ensure this calculation is correct
-        ]);
-    
-        return redirect()->route('products.index')->with('success', 'Product added successfully.');
+{
+    // Validate the form input
+    $request->validate([
+        'name' => 'required|string|max:255',
+        'description' => 'required|string',
+        'price' => 'required|numeric|min:0',
+        'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        'duration' => 'required|integer|min:1',
+    ]);
+
+    // Handle the image file
+    $imagePath = $request->file('image')->store('products', 'public');
+
+    // Create a new product and save it in the database
+    $product = NewProduct::create([
+        'name' => $request->name,
+        'description' => $request->description,
+        'price' => $request->price,
+        'image' => $imagePath, // Store the image path
+        'auction_status' => 'active', // Set default auction status
+        'duration' => $request->duration,
+        'status' => 'pending',
+    ]);
+
+    // Check if the product was created successfully
+    if ($product) {
+        return redirect()->route('products.index')->with('success', 'Product submitted for review.');
+    } else {
+        Log::error('Failed to create product.', ['request' => $request->all()]);
+        return back()->with('error', 'Failed to create product.');
     }
-    
+}
+
 }

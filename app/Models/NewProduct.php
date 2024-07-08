@@ -36,15 +36,17 @@ class NewProduct extends Model
     }
 
     public function isAuctionActive()
-{
-    $endTime = $this->end_time;
-    return now()->lt($endTime);
-}
-    
+    {
+        return now()->lt($this->end_time);
+    }
     
     public function getEndTimeAttribute($value)
     {
         return Carbon::parse($value);
     }
-    
+
+    public function getImageAttribute($value)
+    {
+        return asset('storage/' . $value);
+    }
 }

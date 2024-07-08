@@ -6,13 +6,13 @@
 
     <div class="row">
         <div class="col-md-6 mb-4">
-            @if($product->image)
-            <img src="{{ asset('storage/' . $product->image) }}" class="card-img-top" alt="">
-            @else
-            <div class="bg-light d-flex align-items-center justify-content-center rounded" style="height: 300px;">
-                <span>No Image Available</span>
-            </div>
-            @endif
+        @if($product->image)
+    <img src="{{ $product->image }}" class="card-img-top" alt="">
+@else
+    <div class="w-full h-48 bg-gray-200 flex items-center justify-center rounded-t-lg">
+        <span>No Image Available</span>
+    </div>
+@endif
         </div>
         <div class="col-md-6">
             <h3 class="my-3">${{ number_format($product->price, 2) }}</h3>

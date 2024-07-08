@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Contribution extends Model
 {
-    protected $fillable = ['team_id', 'user_id', 'amount'];
+    protected $fillable = ['team_id', 'user_id', 'amount', 'ownership_percentage'];
 
     public function user()
     {

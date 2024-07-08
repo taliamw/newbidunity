@@ -11,6 +11,7 @@ use App\Http\Controllers\ContributionController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\AdminListingController;
+use App\Http\Controllers\ReportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -61,6 +62,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::put('/admin/listings/{product}/approve', [AdminListingController::class, 'approve'])->name('admin.listings.approve');
         Route::put('/admin/listings/{product}/reject', [AdminListingController::class, 'reject'])->name('admin.listings.reject');
     });
+
+    Route::get('/admin/products/{listing}/edit', [AdminListingController::class, 'edit'])->name('admin.products.edit');
+    Route::put('/admin/products/{listing}', [AdminListingController::class, 'update'])->name('admin.products.update');
+    Route::delete('/admin/products/{listing}', [AdminListingController::class, 'destroy'])->name('admin.products.destroy');
 });
 
 //public routes
@@ -126,6 +131,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     })->name('sign_in');
     Route::get('/payment-details', [PaymentDetailsController::class, 'edit'])->name('payment-details.edit');
     Route::put('/payment-details', [PaymentDetailsController::class, 'update'])->name('payment-details.update');
+    Route::post('/products/{product}/bid', [ProductController::class, 'placeBid'])->name('products.placeBid');
+
 });
 // Route::get('/products', [ProductController::class, 'index'])->name('products');
 // Route::get('/products', [ProductController::class, 'index'])->name('products.index');
@@ -134,7 +141,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
  // Product Routes
  Route::get('/products', [ProductController::class, 'index'])->name('products.index');
  Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
- Route::post('/products/{product}/bid', [ProductController::class, 'placeBid'])->name('products.placeBid');
  Route::get('/products/{product}/winner', [ProductController::class, 'determineWinner'])->name('products.determineWinner');
  Route::delete('/products/{bid}/remove-bid', 'ProductController@removeBid')->name('products.removeBid');
  Route::delete('/bids/{bid}', [ProductController::class, 'removeBid'])->name('products.removeBid');
@@ -144,3 +150,20 @@ Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.in
 Route::resource('products', ProductController::class);
 Route::post('/bids/{bid}/approve', [ProductController::class, 'approveBid'])->name('bids.approve');
 Route::post('/bids/{bid}/deny', [ProductController::class, 'denyBid'])->name('bids.deny');
+
+
+Route::get('/test-payment', function () {
+    $payment = new \App\Models\Payment();
+    $payment->user_id = 9; // Replace with a valid user ID
+    $payment->amount = 100.00;
+    $payment->stripe_payment_intent_id = 'test_intent_id';
+    $payment->status = 'succeeded';
+    $payment->save();
+
+    return 'Payment saved successfully!';
+});
+
+Route::get('allocation/report/{team}', [ReportController::class, 'generate'])->name('allocation.report.pdf');
+
+
+

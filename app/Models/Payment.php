@@ -12,8 +12,8 @@ class Payment extends Model
 
     protected $fillable = [
         'user_id',
-        'amount',
         'stripe_payment_intent_id',
+        'amount',
         'status',
     ];
 
