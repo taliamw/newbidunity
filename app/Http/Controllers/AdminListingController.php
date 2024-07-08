@@ -4,11 +4,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\NewProduct;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class AdminListingController extends Controller
 {
     public function index()
     {
+        $this->authorize("viewAny", User::class);
+
         $pendingProducts = NewProduct::where('status', 'pending')->get();
         $approvedProducts = NewProduct::where('status', 'approved')->get();
         $rejectedProducts = NewProduct::where('status', 'rejected')->get();
@@ -33,16 +36,28 @@ class AdminListingController extends Controller
         return view('products.edit', compact('listing'));
     }
 
-    // Method to update the listing
     public function update(Request $request, NewProduct $listing)
     {
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
-            // Add more validation rules as per your requirements
+            'price' => 'required|numeric',
+            'image' => 'nullable|image|max:2048',
         ]);
 
-        $listing->update($request->all());
+        $data = $request->all();
+
+        if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($listing->image) {
+                Storage::delete('public/' . $listing->image);
+            }
+
+            // Store the new image
+            $data['image'] = $request->file('image')->store('products', 'public');
+        }
+
+        $listing->update($data);
 
         return redirect()->route('listing_management')->with('success', 'Listing updated successfully.');
     }
@@ -50,9 +65,14 @@ class AdminListingController extends Controller
     // Method to delete the listing
     public function destroy(NewProduct $listing)
     {
+        // Delete image if exists
+        if ($listing->image) {
+            Storage::delete('public/' . $listing->image);
+        }
+
         $listing->delete();
 
-        return redirect()->route('admin.products.index')->with('success', 'Listing deleted successfully.');
+        return redirect()->route('listing_management')->with('success', 'Listing deleted successfully.');
     }
 }
 

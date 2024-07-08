@@ -21,8 +21,6 @@
             {{-- Display Remaining Time --}}
             <h4 class="my-3">Auction Ends In: <span id="countdown-{{ $product->id }}" class="badge badge-info"></span></h4>
 
-
-
             {{-- Determine Auction Status --}}
             <h4 class="my-3">Auction Status:
                 @if($highestBid)
@@ -37,12 +35,12 @@
                 @if(auth()->user()->wishlist && auth()->user()->wishlist->contains($product->id))
                 <form action="{{ route('wishlist.remove', $product) }}" method="POST">
                     @csrf
-                    <button type="submit" class="btn btn-danger">Remove from Wishlist</button>
+                    <button type="submit" class="btn btn-danger" style="background-color: #007bff; border-color: #007bff;">Remove from Wishlist</button>
                 </form>
                 @else
                 <form action="{{ route('wishlist.add', $product) }}" method="POST">
                     @csrf
-                    <button type="submit" class="btn btn-primary">Add to Wishlist</button>
+                    <button type="submit" class="btn btn-primary" style="background-color: #007bff; border-color: #007bff;">Add to Wishlist</button>
                 </form>
                 @endif
             @else
@@ -64,7 +62,7 @@
                         <option value="team">Team</option>
                     </select>
                 </div>
-                <button type="submit" class="btn btn-primary">Place Bid</button>
+                <button type="submit" class="btn btn-primary" style="background-color: #007bff; border-color: #007bff;">Place Bid</button>
             </form>
             @else
             <div class="alert alert-warning mt-3">Auction has ended. No more bids can be placed.</div>
@@ -82,7 +80,6 @@
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     <span>{{ $bid->user->name }}</span>
                     <span>${{ number_format($bid->amount, 2) }}</span>
-                    <span class="badge badge-info">{{ ucfirst($bid->status) }}</span>
                     @auth
                         @if(auth()->user()->id === $bid->user_id)
                         <form action="{{ route('products.removeBid', $bid) }}" method="POST">

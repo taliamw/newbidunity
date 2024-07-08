@@ -22,6 +22,6 @@ class DetermineAuctionWinners extends Job
             if ($highestBid) {
                 $highestBid->user->notify(new AuctionWonNotification($product));
             }
-        }
-    }
+}
+}
 }

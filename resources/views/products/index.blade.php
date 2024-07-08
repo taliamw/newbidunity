@@ -17,7 +17,7 @@
     <div class="flex mb-4">
         <form action="{{ route('products.index') }}" method="GET" class="flex w-full">
             <input type="text" name="search" class="form-input w-full" placeholder="Search products" value="{{ request()->input('search') }}">
-            <button type="submit" class="btn btn-primary ml-2">Search</button>
+            <button type="submit" class="btn btn-primary ml-2" style="background-color: #007bff; border-color: #007bff;">Search</button>
         </form>
     </div>
 
@@ -43,7 +43,7 @@
                 @auth
                 <form action="{{ route('wishlist.add', $product) }}" method="POST">
                     @csrf
-                    <button type="submit" class="btn btn-primary">
+                    <button type="submit" class="btn btn-primary" style="background-color: #007bff; border-color: #007bff;">
                         @if(auth()->user()->wishlist && auth()->user()->wishlist->contains($product->id))
                             Remove from Wishlist
                         @else
@@ -128,8 +128,8 @@
 
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary">Add Product</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" style="background-color: #6c757d; border-color: #6c757d;">Close</button>
+        <button type="submit" class="btn btn-primary" style="background-color: #007bff; border-color: #007bff;">Add Product</button>
     </div>
 </form>
 

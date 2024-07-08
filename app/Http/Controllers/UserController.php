@@ -23,6 +23,8 @@ $users = User::all();
     }
     public function viewUsers()
     {
+        $this->authorize("viewAny", User::class);
+
         // Fetch users data and display in 'viewusers.blade.php'
         $users = User::all();
         $users = User::with('registeredBy')->get();
@@ -65,6 +67,8 @@ $users = User::all();
     // Display the specified user
     public function show(User $user)
     {
+        $this->authorize("viewAny", User::class);
+
         
         return view('admin.showuser', compact('user'));
     }
@@ -72,6 +76,8 @@ $users = User::all();
     // Show the form for editing the specified user
     public function edit(User $user)
     {
+        $this->authorize("viewAny", User::class);
+
         return view('admin.edituser', compact('user'));
     }
 
@@ -93,6 +99,8 @@ $users = User::all();
     // Remove the specified user from the database
     public function destroy(User $user)
     {
+        $this->authorize("viewAny", User::class);
+
         $user->delete();
 
         return redirect()->route('viewusers')
@@ -100,11 +108,15 @@ $users = User::all();
     }
 
 public function loadChartJsPage(){
+    $this->authorize("viewAny", User::class);
+
     return view("admin.chartjs-page");
 }
 
 
 public function add_admin(){
+    $this->authorize("viewAny", User::class);
+
     return view("admin.add_admin");
 }
 

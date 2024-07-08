@@ -6,8 +6,6 @@ use Illuminate\Http\Request;
 use App\Models\NewProduct;
 use App\Models\Bid;
 use App\Models\Team;
-use App\Notifications\OutbidNotification;
-use Carbon\Carbon;
 
 class ProductController extends Controller
 {
@@ -22,22 +20,20 @@ class ProductController extends Controller
                   ->orWhere('description', 'like', "%{$search}%");
         }
 
-        $products = $query->paginate(12);
+        $products = $query->paginate(12); // Adjust the number of items per page as needed
 
         return view('products.index', compact('products'));
     }
 
     public function show(NewProduct $product)
-{
-    $bids = $product->bids()->orderBy('amount', 'desc')->get();
-    $highestBid = $bids->first();
-    $isAuctionActive = $product->isAuctionActive();
-    $remainingTime = $product->end_time; // Assuming end_time is properly formatted as Carbon instance
+    {
+        $bids = $product->bids()->orderBy('amount', 'desc')->get();
+        $highestBid = $bids->first();
+        $isAuctionActive = $product->isAuctionActive();
+        $remainingTime = $product->getEndTime();
 
-
-    return view('products.show', compact('product', 'bids', 'highestBid', 'isAuctionActive', 'remainingTime'));
-}
-
+        return view('products.show', compact('product', 'bids', 'highestBid', 'isAuctionActive', 'remainingTime'));
+    }
 
     public function placeBid(Request $request, NewProduct $product)
     {
@@ -76,12 +72,6 @@ class ProductController extends Controller
             }
         }
 
-        // Notify previous highest bidder
-        $highestBid = $product->bids()->orderBy('amount', 'desc')->first();
-        if ($highestBid && $highestBid->user_id !== $user->id) {
-            $highestBid->user->notify(new OutbidNotification($product));
-        }
-
         // Place the bid if all checks pass
         Bid::create([
             'product_id' => $product->id,
@@ -101,6 +91,7 @@ class ProductController extends Controller
 
     public function removeBid(Bid $bid)
     {
+        // Add authorization logic if needed (e.g., check if user can remove this bid)
         $bid->delete();
 
         return back()->with('success', 'Bid removed successfully.');
@@ -137,7 +128,7 @@ class ProductController extends Controller
     } else {
         Log::error('Failed to create product.', ['request' => $request->all()]);
         return back()->with('error', 'Failed to create product.');
-    }
+}
 }
 
 }

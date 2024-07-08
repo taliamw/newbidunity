@@ -36,7 +36,7 @@
                 <div class="card-footer">
                     <form action="{{ route('wishlist.remove', $item) }}" method="POST">
                         @csrf
-                        <button type="submit" class="btn btn-danger btn-block">Remove</button>
+                        <button type="submit" class="btn btn-danger btn-block" style="background-color: #dc3545; border-color: #dc3545;">Remove</button>
                     </form>
                 </div>
             </div>

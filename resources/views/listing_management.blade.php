@@ -27,14 +27,14 @@
                                 <form method="POST" action="{{ route('admin.listings.approve', $product->id) }}" class="d-inline">
                                     @csrf
                                     @method('PUT')
-                                    <button type="submit" class="btn btn-success">Approve</button>
+                                    <button type="submit" class="btn btn-success" style="background-color: #28a745; border-color: #28a745;">Approve</button>
                                 </form>
 
                                 <!-- Reject Form -->
                                 <form method="POST" action="{{ route('admin.listings.reject', $product->id) }}" class="d-inline">
                                     @csrf
                                     @method('PUT')
-                                    <button type="submit" class="btn btn-danger">Reject</button>
+                                    <button type="submit" class="btn btn-danger" style="background-color: #dc3545; border-color: #dc3545;" onclick="return confirm('Are you sure you want to reject this listing?')">Reject</button>
                                 </form>
                             </td>
                         </tr>
@@ -42,7 +42,7 @@
                 </tbody>
             </table>
         </div>
-    </div>
+    </div><br><br><br>
     <!-- Approved Listings -->
     <h2>Approved Listings</h2>
 
@@ -71,7 +71,7 @@
                     <form action="{{ route('admin.products.destroy', $product->id) }}" method="POST" style="display:inline-block;">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this listing?')">Delete</button>
+                        <button type="submit" class="btn btn-danger" style="background-color: #dc3545; border-color: #dc3545;" onclick="return confirm('Are you sure you want to delete this listing?')">Delete</button>
                     </form>
                 </td>
                             
@@ -81,9 +81,9 @@
             </table>
         </div>
     </div>
-
+<br><br><br>
     <!-- Rejected Listings -->
-    <h2>Rejected Listings</h2>
+    <h1>Rejected Listings</h1>
 
     <div class="container mt-5">
         <!-- Table -->
