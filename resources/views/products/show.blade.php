@@ -21,6 +21,8 @@
             {{-- Display Remaining Time --}}
             <h4 class="my-3">Auction Ends In: <span id="countdown-{{ $product->id }}" class="badge badge-info"></span></h4>
 
+
+
             {{-- Determine Auction Status --}}
             <h4 class="my-3">Auction Status:
                 @if($highestBid)
@@ -80,6 +82,7 @@
                 <li class="list-group-item d-flex justify-content-between align-items-center">
                     <span>{{ $bid->user->name }}</span>
                     <span>${{ number_format($bid->amount, 2) }}</span>
+                    <span class="badge badge-info">{{ ucfirst($bid->status) }}</span>
                     @auth
                         @if(auth()->user()->id === $bid->user_id)
                         <form action="{{ route('products.removeBid', $bid) }}" method="POST">

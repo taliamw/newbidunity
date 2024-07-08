@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Models\NewProduct;
 use App\Models\Bid;
 use App\Models\Team;
+use App\Notifications\OutbidNotification;
+use Carbon\Carbon;
 
 class ProductController extends Controller
 {
@@ -20,20 +22,22 @@ class ProductController extends Controller
                   ->orWhere('description', 'like', "%{$search}%");
         }
 
-        $products = $query->paginate(12); // Adjust the number of items per page as needed
+        $products = $query->paginate(12);
 
         return view('products.index', compact('products'));
     }
 
     public function show(NewProduct $product)
-    {
-        $bids = $product->bids()->orderBy('amount', 'desc')->get();
-        $highestBid = $bids->first();
-        $isAuctionActive = $product->isAuctionActive();
-        $remainingTime = $product->getEndTime();
+{
+    $bids = $product->bids()->orderBy('amount', 'desc')->get();
+    $highestBid = $bids->first();
+    $isAuctionActive = $product->isAuctionActive();
+    $remainingTime = $product->end_time; // Assuming end_time is properly formatted as Carbon instance
 
-        return view('products.show', compact('product', 'bids', 'highestBid', 'isAuctionActive', 'remainingTime'));
-    }
+
+    return view('products.show', compact('product', 'bids', 'highestBid', 'isAuctionActive', 'remainingTime'));
+}
+
 
     public function placeBid(Request $request, NewProduct $product)
     {
@@ -72,6 +76,12 @@ class ProductController extends Controller
             }
         }
 
+        // Notify previous highest bidder
+        $highestBid = $product->bids()->orderBy('amount', 'desc')->first();
+        if ($highestBid && $highestBid->user_id !== $user->id) {
+            $highestBid->user->notify(new OutbidNotification($product));
+        }
+
         // Place the bid if all checks pass
         Bid::create([
             'product_id' => $product->id,
@@ -91,7 +101,6 @@ class ProductController extends Controller
 
     public function removeBid(Bid $bid)
     {
-        // Add authorization logic if needed (e.g., check if user can remove this bid)
         $bid->delete();
 
         return back()->with('success', 'Bid removed successfully.');
@@ -109,23 +118,26 @@ class ProductController extends Controller
             'duration_hours' => 'required|integer|min:0|max:23',
             'duration_minutes' => 'required|integer|min:0|max:59',
         ]);
-
+    
         // Handle the image file
         $imagePath = $request->file('image')->store('products', 'public');
-
+    
         // Calculate the auction end time
         $duration = $request->input('duration_days') * 1440 + $request->input('duration_hours') * 60 + $request->input('duration_minutes');
-
+    
         // Create a new product and save it in the database
-        NewProduct::create([
+        $product = NewProduct::create([
             'name' => $request->name,
             'description' => $request->description,
             'price' => $request->price,
             'image' => $imagePath,
             'auction_status' => 'active',
-            'end_time' => now()->addMinutes($duration),
+            'duration' => $duration, // Store the duration
+            'status' => 'pending', // or any default status
+            'end_time' => now()->addDays($duration), // Ensure this calculation is correct
         ]);
-
+    
         return redirect()->route('products.index')->with('success', 'Product added successfully.');
     }
+    
 }
