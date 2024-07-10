@@ -21,6 +21,7 @@ class NewProduct extends Model
         'duration_unit',
         'end_time',
         'status',
+        'user_id',
     ];
 
 
@@ -57,6 +58,10 @@ public function documents()
     return $this->hasMany(ProductDocument::class);
 }
 
+public function user()
+{
+    return $this->belongsTo(User::class);
+}
 
 }
 

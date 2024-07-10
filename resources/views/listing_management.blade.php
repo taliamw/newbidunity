@@ -31,11 +31,23 @@
                                 </form>
 
                                 <!-- Reject Form -->
-                                <form method="POST" action="{{ route('admin.listings.reject', $product->id) }}" class="d-inline">
-                                    @csrf
-                                    @method('PUT')
-                                    <button type="submit" class="btn btn-danger" style="background-color: #dc3545; border-color: #dc3545;" onclick="return confirm('Are you sure you want to reject this listing?')">Reject</button>
-                                </form>
+                                <form id="rejectionForm" method="POST" action="{{ route('admin.listings.reject', $product->id) }}" class="d-inline">
+    @csrf
+    @method('PUT')
+    <input type="hidden" name="reason" id="rejectReason">
+    <button type="button" class="btn btn-danger" style="background-color: #dc3545; border-color: #dc3545;" onclick="showRejectPopup()">Reject</button>
+</form>
+
+<script>
+    function showRejectPopup() {
+        var reason = prompt("Enter rejection reason:");
+        if (reason) {
+            $('#rejectReason').val(reason);
+            $('#rejectionForm').submit();
+        }
+    }
+</script>
+
                             </td>
                         </tr>
                     @endforeach

@@ -9,6 +9,7 @@ use App\Models\Team;
 use App\Models\ProductDocument;
 use App\Notifications\ProductSubmittedNotification;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
@@ -113,6 +114,9 @@ class ProductController extends Controller
             'documents.*' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
         ]);
 
+        $user = auth()->user();
+
+
         // Handle the image file
         $imagePath = $request->file('image')->store('products', 'public');
 
@@ -144,6 +148,8 @@ class ProductController extends Controller
             'duration_unit' => $durationUnit,
             'end_time' => $endTime,
             'status' => 'pending',
+            'user_id' => $user->id,
+
         ]);
 
         // Handle product documents

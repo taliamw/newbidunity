@@ -9,6 +9,7 @@
     <div class="flex justify-end mb-4">
         <button class="btn btn-primary" data-toggle="modal" data-target="#createProductModal">Add Product</button>
         <a href="{{ route('wishlist.index') }}" class="btn btn-primary ms-2">My Wishlist</a> <!-- Link to go to the wishlist page -->
+
     </div>
     @endauth
 
@@ -102,25 +103,31 @@
                 </button>
             </div>
             <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data">
-                @csrf
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label for="name">Product Name</label>
-                        <input type="text" name="name" class="form-control" id="name" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="description">Description</label>
-                        <textarea name="description" class="form-control" id="description" required></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="price">Price</label>
-                        <input type="number" name="price" class="form-control" id="price" step="0.01" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="image">Image</label>
-                        <input type="file" name="image" class="form-control-file" id="image" required>
-                    </div>
-                    <div class="form-group">
+    @csrf
+    <div class="modal-body">
+        <div class="form-group">
+            <label for="name">Product Name</label>
+            <input type="text" name="name" class="form-control" id="name" required>
+        </div>
+        <div class="form-group">
+            <label for="description">Description</label>
+            <textarea name="description" class="form-control" id="description" required></textarea>
+        </div>
+        <div class="form-group">
+            <label for="price">Price</label>
+            <input type="number" name="price" class="form-control" id="price" step="0.01" maxlength= "6" required>
+        </div>
+        <script>
+        // Optional: You can use JavaScript to further restrict input to numbers only
+        document.getElementById('price').addEventListener('input', function() {
+            this.value = this.value.replace(/\D/g, '').slice(0, 6); // Allow only digits and limit to 6 characters
+        });
+    </script>
+        <div class="form-group">
+            <label for="image">Image</label>
+            <input type="file" name="image" class="form-control-file" id="image" required>
+        </div>
+        <div class="form-group">
                         <label for="duration_value">Duration</label>
                         <input type="number" name="duration_value" class="form-control" id="duration_value" min="1" required>
                     </div>
@@ -136,12 +143,12 @@
                         <label for="documents">Procuct Documents to prove ownership and authenticity </label>
                         <input type="file" name="documents[]" class="form-control-file" id="documents" multiple>
                     </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal" style="background-color: #6c757d; border-color: #6c757d;">Close</button>
-                    <button type="submit" class="btn btn-primary" style="background-color: #007bff; border-color: #007bff;">Add Product</button>
-                </div>
-            </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal" style="background-color: #6c757d; border-color: #6c757d;">Close</button>
+        <button type="submit" class="btn btn-primary" style="background-color: #007bff; border-color: #007bff;">Add Product</button>
+    </div>
+</form>
         </div>
     </div>
 </div>
