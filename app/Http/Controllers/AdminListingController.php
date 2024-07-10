@@ -15,7 +15,7 @@ class AdminListingController extends Controller
     {
         $this->authorize("viewAny", User::class);
 
-        $pendingProducts = NewProduct::where('status', 'pending')->get();
+        $pendingProducts = NewProduct::where('status', 'pending')->with('documents')->get();
         $approvedProducts = NewProduct::where('status', 'approved')->get();
         $rejectedProducts = NewProduct::where('status', 'rejected')->get();
         return view('listing_management', compact('pendingProducts', 'approvedProducts', 'rejectedProducts'));

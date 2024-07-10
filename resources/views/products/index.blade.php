@@ -4,6 +4,16 @@
 <div class="container mx-auto px-4">
     <h1 class="text-2xl font-bold my-4">Products</h1>
 
+    @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul>
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
     <!-- Create Product Button -->
     @auth
     <div class="flex justify-end mb-4">
@@ -12,6 +22,7 @@
 
     </div>
     @endauth
+   
 
     <!-- Search bar -->
     <div class="flex mb-4">

@@ -12,6 +12,7 @@
                         <th>Description</th>
                         <th>Price</th>
                         <th>Status</th>
+                        <th>Documents</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -22,6 +23,11 @@
                             <td>{{ $product->description }}</td>
                             <td>{{ $product->price }}</td>
                             <td>{{ $product->status }}</td>
+                            <td>
+                        @foreach ($product->documents as $document)
+                            <a href="{{ asset('storage/' . $document->path) }}" target="_blank">Download</a><br>
+                        @endforeach
+                    </td>
                             <td>
                                 <!-- Approve Form -->
                                 <form method="POST" action="{{ route('admin.listings.approve', $product->id) }}" class="d-inline">
