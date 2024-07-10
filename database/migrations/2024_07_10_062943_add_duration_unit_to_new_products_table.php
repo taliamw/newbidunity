@@ -14,8 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::table('new_products', function (Blueprint $table) {
-            $table->integer('duration')->default(1); // Duration in days
-            $table->string('duration_unit')->default('days'); // Duration unit (days, hours, minutes)
+            $table->string('duration_unit')->default('days');
         });
     }
 
@@ -27,7 +26,6 @@ return new class extends Migration
     public function down()
     {
         Schema::table('new_products', function (Blueprint $table) {
-            $table->dropColumn('duration');
             $table->dropColumn('duration_unit');
         });
     }

@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\NewProduct;
 use App\Models\Bid;
 use App\Models\Team;
+use App\Models\ProductDocument;
+use App\Notifications\ProductSubmittedNotification;
+use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
@@ -13,14 +16,14 @@ class ProductController extends Controller
     {
         $search = $request->input('search');
         
-        $query = NewProduct::query()->where('status', 'approved');;
+        $query = NewProduct::query()->where('status', 'approved');
 
         if ($search) {
             $query->where('name', 'like', "%{$search}%")
                   ->orWhere('description', 'like', "%{$search}%");
         }
 
-        $products = $query->paginate(12); // Adjust the number of items per page as needed
+        $products = $query->paginate(12);
 
         return view('products.index', compact('products'));
     }
@@ -91,44 +94,79 @@ class ProductController extends Controller
 
     public function removeBid(Bid $bid)
     {
-        // Add authorization logic if needed (e.g., check if user can remove this bid)
         $bid->delete();
 
         return back()->with('success', 'Bid removed successfully.');
     }
 
     public function store(Request $request)
-{
-    // Validate the form input
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'description' => 'required|string',
-        'price' => 'required|numeric|min:0',
-        'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        'duration' => 'required|integer|min:1',
-    ]);
+    {
+        // Validate the form input
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
+            'price' => 'required|numeric|min:0',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            'duration_value' => 'required|integer|min:1',
+            'duration_unit' => 'required|string|in:minutes,hours,days',
+            'documents' => 'nullable|array',
+            'documents.*' => 'nullable|file|mimes:pdf,doc,docx|max:2048',
+        ]);
 
-    // Handle the image file
-    $imagePath = $request->file('image')->store('products', 'public');
+        // Handle the image file
+        $imagePath = $request->file('image')->store('products', 'public');
 
-    // Create a new product and save it in the database
-    $product = NewProduct::create([
-        'name' => $request->name,
-        'description' => $request->description,
-        'price' => $request->price,
-        'image' => $imagePath, // Store the image path
-        'auction_status' => 'active', // Set default auction status
-        'duration' => $request->duration,
-        'status' => 'pending',
-    ]);
+        // Calculate the end time based on duration value and unit
+        $durationValue = $request->input('duration_value');
+        $durationUnit = $request->input('duration_unit');
+        $endTime = now();
 
-    // Check if the product was created successfully
-    if ($product) {
-        return redirect()->route('products.index')->with('success', 'Product submitted for review.');
-    } else {
-        Log::error('Failed to create product.', ['request' => $request->all()]);
-        return back()->with('error', 'Failed to create product.');
-}
-}
+        switch ($durationUnit) {
+            case 'minutes':
+                $endTime->addMinutes($durationValue);
+                break;
+            case 'hours':
+                $endTime->addHours($durationValue);
+                break;
+            case 'days':
+                $endTime->addDays($durationValue);
+                break;
+        }
 
+        // Create a new product and save it in the database
+        $product = NewProduct::create([
+            'name' => $request->name,
+            'description' => $request->description,
+            'price' => $request->price,
+            'image' => $imagePath, // Store the image path
+            'auction_status' => 'active', // Set default auction status
+            'duration' => $durationValue,
+            'duration_unit' => $durationUnit,
+            'end_time' => $endTime,
+            'status' => 'pending',
+        ]);
+
+        // Handle product documents
+        if ($request->hasFile('documents')) {
+            foreach ($request->file('documents') as $document) {
+                $documentPath = $document->store('product_documents', 'public');
+                ProductDocument::create([
+                    'new_product_id' => $product->id,
+                    'path' => $documentPath,
+                ]);
+            }
+        }
+
+        // Send notification to the user
+        $user = auth()->user();
+        $user->notify(new ProductSubmittedNotification($product));
+
+        // Check if the product was created successfully
+        if ($product) {
+            return redirect()->route('products.index')->with('success', 'Product submitted for review.');
+        } else {
+            Log::error('Failed to create product.', ['request' => $request->all()]);
+            return back()->with('error', 'Failed to create product.');
+        }
+    }
 }

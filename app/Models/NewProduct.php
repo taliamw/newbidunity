@@ -11,7 +11,17 @@ class NewProduct extends Model
 
     protected $table = 'new_products';
 
-    protected $fillable = ['name', 'description', 'price', 'image', 'auction_status', 'duration', 'status'];
+    protected $fillable = [
+        'name',
+        'description',
+        'price',
+        'image',
+        'auction_status',
+        'duration',
+        'duration_unit',
+        'end_time',
+        'status',
+    ];
 
 
     public function bids()
@@ -42,6 +52,11 @@ class NewProduct extends Model
 {
     return $this->hasMany(NewProduct::class);
 }
+public function documents()
+{
+    return $this->hasMany(ProductDocument::class);
+}
+
 
 }
 
