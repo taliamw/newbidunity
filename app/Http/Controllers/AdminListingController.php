@@ -5,6 +5,9 @@ use Illuminate\Http\Request;
 use App\Models\NewProduct;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use App\Notifications\ListingRejected;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\ListingApproved;
 
 class AdminListingController extends Controller
 {
@@ -22,12 +25,23 @@ class AdminListingController extends Controller
     {
         $product->update(['status' => 'approved']);
         Log::info('Product approved', ['product_id' => $product->id, 'status' => $product->status]);
+
+        $product->user->notify(new ListingApproved($product));
+
         return redirect()->route('listing_management')->with('success', 'Listing approved.');    }
 
-    public function reject(NewProduct $product)
+    public function reject(NewProduct $product, Request $request)
     {
         $product->update(['status' => 'rejected']);
         Log::info('Product rejected', ['product_id' => $product->id, 'status' => $product->status]);
+
+        // Notify user with rejection reason
+    if ($request->has('reason')) {
+        $product->user->notify(new ListingRejected($product, $request->reason));
+    } else {
+        return redirect()->back()->with('error', 'Rejection reason not provided.');
+    }
+
         return redirect()->route('listing_management')->with('success', 'Listing rejected.');    
     }
 

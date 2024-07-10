@@ -9,18 +9,14 @@ This web app revolutionizes online auctions by enabling joint investment project
 
 ## Set up and deploy
 ### Prerequisites
-1. PHP installed on your system (version 7.4 or higher recommended)
-2. Composer globally installed
-3. Node.js and npm installed
-4. MySQL installed
-5. Git installed
+The prerequisites for the project are found in [requirements.txt](requirements.txt) file.
 
 #### 1. Clone the repository
     git clone https://github.com/taliamw/newbidunity.git
     cd newbidunity
 
 #### 2. Install PHP dependecies
-    composer install
+    composer install 
     
 #### 3. Install Node.js Dependencies
     npm install
@@ -48,5 +44,5 @@ The project structure is documented in the [project_structure.txt](project_struc
 * [Michael Mirieri](https://github.com/MirieriMichael)
 
 ## Licenses
-* MIT License
+* [MIT License](https://opensource.org/license/mit)
 * [BootstrapeMade](https://bootstrapmade.com/license/)

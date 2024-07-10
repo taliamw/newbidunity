@@ -1,0 +1,14 @@
+# PHP version 7.4 or higher
+php >= 7.4
+
+# Composer globally installed
+composer
+
+# Node.js and npm installed
+nodejs
+
+# MySQL installed
+mysql
+
+# Git installed
+git
