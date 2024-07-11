@@ -48,7 +48,7 @@
             <div class="p-4">
                 <h4 class="text-lg font-semibold">{{ $product->name }}</h4>
                 <p class="text-gray-600">{{ $product->description }}</p>
-                <h5 class="text-xl font-bold mt-2">${{ $product->price }}</h5>
+                <h5 class="text-xl font-bold mt-2">Ksh{{ $product->price }}</h5>
             </div>
             <div class="p-4 bg-gray-100 flex justify-between items-center">
                 @auth

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\NewProduct;
 use App\Models\Bid;
+use App\Models\User;
 use App\Models\Team;
 use App\Models\ProductDocument;
 use App\Notifications\ProductSubmittedNotification;
@@ -31,13 +32,45 @@ class ProductController extends Controller
 
     public function show(NewProduct $product)
     {
-        $bids = $product->bids()->orderBy('amount', 'desc')->get();
-        $highestBid = $bids->first();
+        // Retrieve bids grouped by user ID and sum the bid amounts
+        $userBids = Bid::where('product_id', $product->id)
+                       ->selectRaw('user_id, sum(amount) as total_amount')
+                       ->groupBy('user_id')
+                       ->get()
+                       ->pluck('total_amount', 'user_id');
+    
+        // Retrieve highest bid for the product
+        $highestBid = Bid::where('product_id', $product->id)
+                        ->orderBy('amount', 'desc')
+                        ->first();
+    
+        // Check if auction is active for the product
         $isAuctionActive = $product->isAuctionActive();
+    
+        // Get remaining time for the auction
         $remainingTime = $product->getEndTime();
-
-        return view('products.show', compact('product', 'bids', 'highestBid', 'isAuctionActive', 'remainingTime'));
+    
+        // Fetch all users that might have bids
+        $userIds = $userBids->keys()->toArray(); // Get user IDs with bids
+        $users = User::whereIn('id', $userIds)->get(); // Fetch users based on bid user IDs
+    
+        return view('products.show', [
+            'product' => $product,
+            'userBids' => $userBids,
+            'highestBid' => $highestBid,
+            'isAuctionActive' => $isAuctionActive,
+            'remainingTime' => $remainingTime,
+            'users' => $users, // Pass users to the view
+        ]);
     }
+
+    public function showBids(User $user)
+{
+    $userBids = $user->bids()->orderBy('created_at', 'desc')->get();
+
+    return view('products.bids_show', compact('user', 'userBids'));
+}
+
 
     public function placeBid(Request $request, NewProduct $product)
     {

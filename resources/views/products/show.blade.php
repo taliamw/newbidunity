@@ -15,7 +15,7 @@
 @endif
         </div>
         <div class="col-md-6">
-            <h3 class="my-3">${{ number_format($product->price, 2) }}</h3>
+            <h3 class="my-3">Ksh{{ number_format($product->price, 2) }}</h3>
             <p>{{ $product->description }}</p>
 
             {{-- Display Remaining Time --}}
@@ -24,7 +24,7 @@
             {{-- Determine Auction Status --}}
             <h4 class="my-3">Auction Status:
                 @if($highestBid)
-                    <span class="badge badge-info">Highest Bid: ${{ number_format($highestBid->amount, 2) }}</span>
+                    <span class="badge badge-info">Highest Bid: Ksh{{ number_format($highestBid->amount, 2) }}</span>
                 @else
                     <span class="badge badge-secondary">No Bids Yet</span>
                 @endif
@@ -73,25 +73,28 @@
             <div class="alert alert-danger mt-3">{{ session('error') }}</div>
             @endif
 
-            {{-- Bids List --}}
-            <h4 class="my-3">Bids</h4>
-            <ul class="list-group">
-                @foreach($bids as $bid)
-                <li class="list-group-item d-flex justify-content-between align-items-center">
-                    <span>{{ $bid->user->name }}</span>
-                    <span>${{ number_format($bid->amount, 2) }}</span>
-                    @auth
-                        @if(auth()->user()->id === $bid->user_id)
-                        <form action="{{ route('products.removeBid', $bid) }}" method="POST">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="btn btn-sm btn-outline-danger">Remove Bid</button>
-                        </form>
-                        @endif
-                    @endauth
-                </li>
-                @endforeach
-            </ul>
+
+
+            {{-- Display User Bids --}}
+<h4 class="my-3">Bids</h4>
+<ul class="list-group">
+    @foreach($userBids as $userId => $totalAmount)
+        @php
+            $user = $users->firstWhere('id', $userId);
+        @endphp
+        @if($user)
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>{{ $user->name }}</span>
+                <span>Ksh{{ number_format($totalAmount, 2) }}</span>
+                @auth
+                @if(auth()->user()->id === $user->id)
+                        <a href="{{ route('products.bids_show', ['user' => $user->id]) }}" class="btn btn-sm btn-primary">View Bids</a>
+                    @endif
+                @endauth
+            </li>
+        @endif
+    @endforeach
+</ul>
         </div>
     </div>
 </div>
