@@ -1,8 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use App\Models\User;
+use App\Models\Bid;
+use App\Models\NewProduct;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -121,14 +125,26 @@ public function add_admin(){
 }
 
 
-public function getUsersAndAdminsCount()
-    {
-        $usersCount = User::where('role', 'user')->count();
-        $adminsCount = User::where('role', 'admin')->count();
+public function analytics() {
+    $bidsPerDay = Bid::select(DB::raw('DATE(created_at) as date'), DB::raw('count(*) as count'))
+                      ->groupBy('date')
+                      ->get();
 
-        return response()->json([
-            'users' => $usersCount,
-            'admins' => $adminsCount,
-        ]);
-    }
+    $revenueOverTime = Bid::select(DB::raw('DATE(created_at) as date'), DB::raw('sum(amount) as total'))
+                          ->groupBy('date')
+                          ->get();
+
+    $topBiddingUsers = User::withCount('bids')
+                           ->orderBy('bids_count', 'desc')
+                           ->take(10)
+                           ->get();
+
+    $topBiddedProducts = NewProduct::withCount('bids')
+                                ->orderBy('bids_count', 'desc')
+                                ->take(10)
+                                ->get();
+
+    return view('admin.analytics', compact('bidsPerDay', 'revenueOverTime', 'topBiddingUsers', 'topBiddedProducts'));
+}
+
 }

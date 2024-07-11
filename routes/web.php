@@ -12,6 +12,8 @@ use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\AdminListingController;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ApiController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -115,7 +117,7 @@ Route::get('/add_admin', [UserController::class, 'add_admin'])->name('add_admin'
 Route::get('/generate-pdf', [PDFController::class, 'generatePDF'])->name('generate.pdf');
 Route::get('/report/user-report', [PDFController::class, 'downloadUserReport'])->name('report.user-report');
 Route::get('/export-table-pdf', [PDFController::class, 'exportTableToPDF'])->name('export.table.pdf');
-Route::get('/api/users-admins-count', [UserController::class, 'getUsersAndAdminsCount']);
+Route::get('/api/users-admins-count', [ApiController::class, 'getUsersAndAdminsCount']);
 
 
 // // Routes that need authentication and lock check
@@ -142,8 +144,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
  Route::get('/products', [ProductController::class, 'index'])->name('products.index');
  Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
  Route::get('/products/{product}/winner', [ProductController::class, 'determineWinner'])->name('products.determineWinner');
- Route::delete('/products/{bid}/remove-bid', 'ProductController@removeBid')->name('products.removeBid');
  Route::delete('/bids/{bid}', [ProductController::class, 'removeBid'])->name('products.removeBid');
+ Route::get('/bids/{user}', [ProductController::class, 'showBids'])->name('products.bids_show');
+
  Route::post('/wishlist/add/{product}', [WishlistController::class, 'add'])->name('wishlist.add');
 Route::post('/wishlist/remove/{product}', [WishlistController::class, 'remove'])->name('wishlist.remove');
 Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
@@ -165,5 +168,9 @@ Route::get('/test-payment', function () {
 
 Route::get('allocation/report/{team}', [ReportController::class, 'generate'])->name('allocation.report.pdf');
 
+Route::get('/admin/analytics', [UserController::class, 'analytics']);
 
-
+Route::get('/api/bids-per-day', [ApiController::class, 'bidsPerDay']);
+Route::get('/api/revenue-over-time', [ApiController::class, 'revenueOverTime']);
+Route::get('/api/top-bidding-users', [ApiController::class, 'topBiddingUsers']);
+Route::get('/api/top-bidded-products', [ApiController::class, 'topBiddedProducts']);
