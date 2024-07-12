@@ -65,7 +65,7 @@
         <span class="nav-link">Navigation</span>
       </li>
       <li class="nav-item menu-items">
-        <a class="nav-link" href="index.html">
+        <a class="nav-link" href="admin">
           <span class="menu-icon">
             <i class="mdi mdi-speedometer"></i>
           </span>
@@ -73,15 +73,7 @@
         </a>
       </li>
       <li class="nav-item menu-items">
-        <a class="nav-link" href="pages/tables/basic-table.html">
-          <span class="menu-icon">
-            <i class="mdi mdi-table-large"></i>
-          </span>
-          <span class="menu-title">Tables</span>
-        </a>
-      </li>
-      <li class="nav-item menu-items">
-        <a class="nav-link" href="/chartjs-page">
+        <a class="nav-link" href="/admin/analytics">
           <span class="menu-icon">
             <i class="mdi mdi-chart-bar"></i>
           </span>
@@ -110,14 +102,6 @@
             <i class="mdi mdi-chart-bar"></i>
           </span>
           <span class="menu-title">Publish listing</span>
-        </a>
-      </li>
-      <li class="nav-item menu-items">
-        <a class="nav-link" href="/reports/user-report">
-          <span class="menu-icon">
-            <i class="mdi mdi-file-document-box"></i>
-          </span>
-          <span class="menu-title">Reports</span>
         </a>
       </li>
     </ul>

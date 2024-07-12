@@ -1,11 +1,12 @@
-@extends('layouts.app')
-
+@extends('admin.layout')
+<br>
 @section('content')
-    
+<div class="row">
     <div class="container mt-5">
+    <br><br><br><br><br>
     <h1>Pending Listings</h1>
         <div class="table-responsive">
-            <table class="table table-striped">
+            <table class="table">
                 <thead>
                     <tr>
                         <th>Title</th>
@@ -59,15 +60,17 @@
                     @endforeach
                 </tbody>
             </table>
+            <br><br><br><br><br>
+
         </div>
-    </div><br><br><br>
+    </div>
     <!-- Approved Listings -->
     <h2>Approved Listings</h2>
 
     <div class="container mt-5">
         <!-- Table -->
         <div class="table-responsive">
-            <table class="table table-striped">
+            <table class="table">
                 <thead>
                     <tr>
                         <th>Title</th>
@@ -97,16 +100,15 @@
                     @endforeach
                 </tbody>
             </table>
+            <br><br><br>
         </div>
     </div>
-<br><br><br>
     <!-- Rejected Listings -->
     <h1>Rejected Listings</h1>
-
     <div class="container mt-5">
         <!-- Table -->
         <div class="table-responsive">
-            <table class="table table-striped">
+            <table class="table">
                 <thead>
                     <tr>
                         <th>Title</th>
@@ -124,6 +126,8 @@
                     @endforeach
                 </tbody>
             </table>
+            <br><br><br><br><br>
+
         </div>
     </div>
 @endsection

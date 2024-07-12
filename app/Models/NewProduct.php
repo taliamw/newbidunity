@@ -40,13 +40,12 @@ class NewProduct extends Model
     }
    public function isAuctionActive()
     {
-        $endDate = $this->created_at->addDays($this->duration);
-        return Carbon::now()->lt($endDate);
+        return $this->end_time > now();
     }
 
     public function getEndTime()
     {
-        return $this->created_at->addDays($this->duration)->toDateTimeString();
+        return $this->end_time;
     }
 
     public function listings()

@@ -37,13 +37,13 @@
                         @foreach ($userContributions as $userContribution)
                             <tr>
                                 <td class="border border-gray-200 px-4 py-2">{{ $userContribution['name'] }}</td>
-                                <td class="border border-gray-200 px-4 py-2">${{ number_format($userContribution['amount'], 2) }}</td>
+                                <td class="border border-gray-200 px-4 py-2">Ksh{{ number_format($userContribution['amount'], 2) }}</td>
                                 <td class="border border-gray-200 px-4 py-2">{{ number_format($userContribution['percentage'], 2) }}%</td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
-                <h3 class="mt-4">Total Contributions: ${{ number_format($totalContributions, 2) }}</h3>
+                <h3 class="mt-4">Total Contributions: Ksh {{ number_format($totalContributions, 2) }}</h3>
             </div>
 
             <div class="mt-4">

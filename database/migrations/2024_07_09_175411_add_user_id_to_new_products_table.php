@@ -14,7 +14,7 @@ class AddUserIdToNewProductsTable extends Migration
     public function up()
     {
         Schema::table('new_products', function (Blueprint $table) {
-            $table->unsignedBigInteger('user_id')->after('status');
+            $table->unsignedBigInteger('user_id');
 
             // Add foreign key constraint
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

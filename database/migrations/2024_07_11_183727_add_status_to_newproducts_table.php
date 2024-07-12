@@ -1,5 +1,4 @@
 <?php
-
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -8,28 +7,21 @@ return new class extends Migration
 {
     /**
      * Run the migrations.
-     *
-     * @return void
      */
-    public function up()
+    public function up(): void
     {
-        if (!Schema::hasTable('users')) {
-
         Schema::table('new_products', function (Blueprint $table) {
-            $table->string('duration_unit')->default('days');
+            $table->string('status')->default('pending');
         });
-    }
     }
 
     /**
      * Reverse the migrations.
-     *
-     * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('new_products', function (Blueprint $table) {
-            $table->dropColumn('duration_unit');
+            $table->dropColumn('status');
         });
     }
 };

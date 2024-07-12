@@ -101,29 +101,29 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', (event) => {
-        const endTime = new Date("{{ $remainingTime }}").getTime();
-        const countdownElement = document.getElementById('countdown-{{ $product->id }}');
+    const endTime = new Date("{{ $remainingTime }}").getTime();
+    const countdownElement = document.getElementById('countdown-{{ $product->id }}');
 
-        const updateCountdown = () => {
-            const now = new Date().getTime();
-            const distance = endTime - now;
+    const updateCountdown = () => {
+        const now = new Date().getTime();
+        const distance = endTime - now;
 
-            if (distance <= 0) {
-                countdownElement.innerHTML = "Auction Ended";
-                return;
-            }
+        if (distance <= 0) {
+            countdownElement.innerHTML = "Auction Ended";
+            return;
+        }
 
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-            countdownElement.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
-        };
+        countdownElement.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+    };
 
-        updateCountdown();
-        setInterval(updateCountdown, 1000);
-    });
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+});
 </script>
 
 @endsection

@@ -9,6 +9,8 @@ use App\Models\User;
 use App\Models\Team;
 use App\Models\ProductDocument;
 use App\Notifications\ProductSubmittedNotification;
+use App\Notifications\AuctionWonNotification;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 
@@ -122,6 +124,10 @@ class ProductController extends Controller
     public function determineWinner(NewProduct $product)
     {
         $highestBid = $product->bids()->orderBy('amount', 'desc')->first();
+        if ($highestBid) {
+            $winningBidder = $highestBid->user;
+            Notification::send($winningBidder, new AuctionWonNotification($product, $highestBid->amount));
+        }
 
         return view('products.winner', compact('product', 'highestBid'));
     }

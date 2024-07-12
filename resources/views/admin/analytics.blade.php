@@ -1,38 +1,17 @@
 @extends('admin.layout')
-
+<br>
 @section('content')
 <div class="content-wrapper">
     <div class="page-header">
         <h3 class="page-title">Analytics Dashboard</h3>
     </div>
     <div class="row">
-        <!-- Admin vs Users Chart -->
-        <div class="col-lg-6 grid-margin stretch-card">
-            <div class="card">
-                <div class="card-body">
-                    <h4 class="card-title">Admin vs Users</h4>
-                    <canvas id="adminUserChart" style="height:230px; width: 100%;"></canvas>
-                    <a href="{{ route('export.table.pdf') }}" class="btn btn-primary mt-3">Download PDF</a>
-                </div>
-            </div>
-        </div>
-        
         <!-- Bids Per Day Chart -->
         <div class="col-lg-6 grid-margin stretch-card">
             <div class="card">
                 <div class="card-body">
                     <h4 class="card-title">Bids Per Day</h4>
                     <canvas id="bidsPerDayChart" style="height:230px; width: 100%;"></canvas>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Revenue Over Time Chart -->
-        <div class="col-lg-6 grid-margin stretch-card">
-            <div class="card">
-                <div class="card-body">
-                    <h4 class="card-title">Revenue Over Time</h4>
-                    <canvas id="revenueOverTimeChart" style="height:230px; width: 100%;"></canvas>
                 </div>
             </div>
         </div>
@@ -46,6 +25,16 @@
                 </div>
             </div>
         </div>
+
+        <!-- Revenue Over Time Chart -->
+        <div class="col-lg-6 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Revenue Over Time</h4>
+                    <canvas id="revenueOverTimeChart" style="height:230px; width: 100%;"></canvas>
+                </div>
+            </div>
+        </div>
         
         <!-- Top Bidded Products Chart -->
         <div class="col-lg-6 grid-margin stretch-card">
@@ -56,6 +45,17 @@
                 </div>
             </div>
         </div>
+        <!-- Admin vs Users Chart -->
+        <div class="col-lg-6 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Admin vs Users</h4>
+                    <canvas id="adminUserChart" style="height:230px; width: 100%;"></canvas>
+                    <a href="{{ route('export.table.pdf') }}" class="btn btn-primary mt-3">Download PDF</a>
+                </div>
+            </div>
+        </div>
+        
     </div>
 </div>
 
