@@ -33,38 +33,43 @@ class ProductController extends Controller
     }
 
     public function show(NewProduct $product)
-    {
-        // Retrieve bids grouped by user ID and sum the bid amounts
-        $userBids = Bid::where('product_id', $product->id)
-                       ->selectRaw('user_id, sum(amount) as total_amount')
-                       ->groupBy('user_id')
-                       ->get()
-                       ->pluck('total_amount', 'user_id');
+{
+    // Retrieve bids grouped by user ID and sum the bid amounts
+    $userBids = Bid::where('product_id', $product->id)
+                   ->selectRaw('user_id, team_id, sum(amount) as total_amount')
+                   ->groupBy('user_id', 'team_id')
+                   ->get();
     
-        // Retrieve highest bid for the product
-        $highestBid = Bid::where('product_id', $product->id)
-                        ->orderBy('amount', 'desc')
-                        ->first();
-    
-        // Check if auction is active for the product
-        $isAuctionActive = $product->isAuctionActive();
-    
-        // Get remaining time for the auction
-        $remainingTime = $product->getEndTime();
-    
-        // Fetch all users that might have bids
-        $userIds = $userBids->keys()->toArray(); // Get user IDs with bids
-        $users = User::whereIn('id', $userIds)->get(); // Fetch users based on bid user IDs
-    
-        return view('products.show', [
-            'product' => $product,
-            'userBids' => $userBids,
-            'highestBid' => $highestBid,
-            'isAuctionActive' => $isAuctionActive,
-            'remainingTime' => $remainingTime,
-            'users' => $users, // Pass users to the view
-        ]);
-    }
+    // Retrieve highest bid for the product
+    $highestBid = Bid::where('product_id', $product->id)
+                     ->orderBy('amount', 'desc')
+                     ->first();
+
+    // Check if auction is active for the product
+    $isAuctionActive = $product->isAuctionActive();
+
+    // Get remaining time for the auction
+    $remainingTime = $product->getEndTime();
+
+    // Fetch all users that might have bids
+    $userIds = $userBids->pluck('user_id')->toArray();
+    $users = User::whereIn('id', $userIds)->get();
+
+    // Fetch all teams that might have bids
+    $teamIds = $userBids->pluck('team_id')->filter()->toArray();
+    $teams = Team::whereIn('id', $teamIds)->get();
+
+    return view('products.show', [
+        'product' => $product,
+        'userBids' => $userBids,
+        'highestBid' => $highestBid,
+        'isAuctionActive' => $isAuctionActive,
+        'remainingTime' => $remainingTime,
+        'users' => $users,
+        'teams' => $teams,
+    ]);
+}
+
 
     public function showBids(User $user)
 {
@@ -84,12 +89,19 @@ class ProductController extends Controller
         $amount = $request->input('amount');
         $user = auth()->user();
         $bidType = $request->input('bid_type');
+        $teamId = null;
+
+        // Check if the bid is higher than the current price
+if ($amount <= $product->current_price) {
+    return redirect()->route('products.show', $product)->with('error', 'Bid must be higher than the current price.');
+}
+
 
         if ($bidType === 'individual') {
             $userContribution = $user->contributions->sum('amount');
 
             if ($amount > $userContribution) {
-                return redirect()->route('products.show', $product)->with('error', 'Insufficient individual funds to place this bid.');
+                return redirect()->route('products.show', $product)->with('error', 'Insufficient contibutions to place this bid. Kindly proceed to team settings to update your contributions.');
             }
         } else {
             $team = $user->currentTeam;
@@ -101,7 +113,7 @@ class ProductController extends Controller
             $teamContribution = $team->contributions->sum('amount');
 
             if ($amount > $teamContribution) {
-                return redirect()->route('products.show', $product)->with('error', 'Insufficient team funds to place this bid.');
+                return redirect()->route('products.show', $product)->with('error', 'Insufficient team contibutions to place this bid. Kindly proceed to team settings to update.');
             }
 
             if ($user->id !== $team->owner->id) {
@@ -109,6 +121,7 @@ class ProductController extends Controller
                 $team->notifyOwner($user, $product, $amount);
                 return redirect()->route('products.show', $product)->with('success', 'Bid request sent to the team owner for approval.');
             }
+            $teamId = $team->id;
         }
 
         // Place the bid if all checks pass
@@ -116,21 +129,36 @@ class ProductController extends Controller
             'product_id' => $product->id,
             'user_id' => $user->id,
             'amount' => $amount,
+            'bid_type' => $bidType,
+            'team_id' => $teamId,
         ]);
 
         return redirect()->route('products.show', $product)->with('success', 'Bid placed successfully.');
     }
 
     public function determineWinner(NewProduct $product)
-    {
-        $highestBid = $product->bids()->orderBy('amount', 'desc')->first();
-        if ($highestBid) {
+{
+    $highestBid = $product->bids()->orderBy('amount', 'desc')->first();
+    
+    if ($highestBid) {
+        if ($highestBid->bid_type === 'team' && $highestBid->team_id) {
+            // Get the team
+            $winningTeam = Team::find($highestBid->team_id);
+                        
+            // Notify all team members
+            foreach ($winningTeam->users as $member) {
+                Notification::send($member, new AuctionWonNotification($product, $highestBid->amount));
+            }
+        } else {
+            // Notify the individual winner
             $winningBidder = $highestBid->user;
             Notification::send($winningBidder, new AuctionWonNotification($product, $highestBid->amount));
         }
-
-        return view('products.winner', compact('product', 'highestBid'));
     }
+
+    return view('products.winner', compact('product', 'highestBid'));
+}
+
 
     public function removeBid(Bid $bid)
     {
@@ -213,5 +241,26 @@ class ProductController extends Controller
             Log::error('Failed to create product.', ['request' => $request->all()]);
             return back()->with('error', 'Failed to create product.');
         }
+    }
+
+    public function placeBidFromEmail(Request $request, NewProduct $product)
+    {
+        // Validate the signed URL
+        if (!$request->hasValidSignature()) {
+            abort(403, 'Unauthorized action.');
+        }
+
+// Redirect to the product show page if the auction is not active or has ended
+if (!$product->isAuctionActive()) {
+    return redirect()->route('products.show', $product)->with('error', 'Auction is not active.');
+}
+
+// Redirect to the product show page if the user is not logged in
+if (!auth()->check()) {
+    return redirect()->route('products.show', $product)->with('error', 'You need to log in to place a bid.');
+}
+
+// Place the bid using the existing placeBid logic
+return $this->placeBid($request, $product);
     }
 }

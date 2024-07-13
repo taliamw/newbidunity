@@ -24,6 +24,8 @@ class TeamController extends Controller
             $userContributions[$contribution->user->id]['amount'] += $contribution->amount;
         } else {
             $userContributions[$contribution->user->id] = [
+                'id' => $contribution->id,
+                'user_id'=>$contribution->user->id,
                 'name' => $contribution->user->name,
                 'amount' => $contribution->amount
             ];

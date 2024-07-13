@@ -11,7 +11,7 @@ class Bid extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['product_id', 'user_id', 'amount', 'status'];
+    protected $fillable = ['product_id', 'user_id', 'amount', 'status','bid_type','team_id'];
 
     public static function boot()
     {
@@ -38,5 +38,10 @@ class Bid extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function team()
+    {
+        return $this->belongsTo(Team::class);
     }
 }

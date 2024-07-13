@@ -49,6 +49,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/teams', [TeamController::class, 'store'])->name('teams.store');
 
     Route::post('/contributions', [ContributionController::class, 'store'])->name('contributions.store');
+    Route::put('/contributions/{contribution}/subtract', [ContributionController::class, 'subtractContribution'])->name('contributions.subtract');
     
     // Route::get('/products', [ProductController::class, 'index'])->name('products');
     // Route::get('/products', [ProductController::class, 'index'])->name('products.index');
@@ -76,7 +77,7 @@ Route::get('/', function () {
     })->name('home');
 
 Route::get('/signup', function () {
-    return view('signup');
+    return view('auth.register');
 })->name('signup');
 
 Route::get('/email/verify', function () {
@@ -129,7 +130,7 @@ Route::get('/api/users-admins-count', [ApiController::class, 'getUsersAndAdminsC
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/sign_in', function () {
-        return view('sign_in');
+        return view('auth.login');
     })->name('sign_in');
     Route::get('/payment-details', [PaymentDetailsController::class, 'edit'])->name('payment-details.edit');
     Route::put('/payment-details', [PaymentDetailsController::class, 'update'])->name('payment-details.update');
@@ -151,9 +152,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::post('/wishlist/remove/{product}', [WishlistController::class, 'remove'])->name('wishlist.remove');
 Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist.index');
 Route::resource('products', ProductController::class);
-Route::post('/bids/{bid}/approve', [ProductController::class, 'approveBid'])->name('bids.approve');
-Route::post('/bids/{bid}/deny', [ProductController::class, 'denyBid'])->name('bids.deny');
-
+Route::get('products/{product}/place-bid', [ProductController::class, 'placeBidFromEmail'])->name('products.placeBidFromEmail');
 
 Route::get('/test-payment', function () {
     $payment = new \App\Models\Payment();

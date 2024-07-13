@@ -7,6 +7,7 @@ use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use App\Models\User;
 use App\Models\NewProduct;
+use Illuminate\Support\Facades\URL;
 
 class BidApprovalRequest extends Notification
 {
@@ -31,9 +32,9 @@ class BidApprovalRequest extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->line("{$this->user->name} has requested to place a bid of \${$this->amount} on {$this->product->name}.")
-                    ->action('Approve Bid', url('/'))
-                    ->line('Thank you for using our application!');
+                    ->line("{$this->user->name} has requested to place a bid of Ksh {$this->amount} on {$this->product->name}.")
+                    ->action('Proceed to place bid', route('products.show',[$this->product]))
+                    ->line('Thank you for using BidUnity!');
     }
 
     public function toArray($notifiable)

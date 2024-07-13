@@ -29,5 +29,17 @@ class ContributionController extends Controller
 
         return redirect()->route('teams.show', $request->team_id)->with('success', 'Contribution added successfully.');
     }
+
+    public function subtractContribution(Request $request, Contribution $contribution)
+    {
+        $request->validate([
+            'amount' => 'required|numeric|min:0.01|max:' . $contribution->amount,
+        ]);
+
+        $contribution->amount -= $request->amount;
+        $contribution->save();
+
+        return redirect()->back()->with('success', 'Contribution amount subtracted successfully.');
+    }
     
 }

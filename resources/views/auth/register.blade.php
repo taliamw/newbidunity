@@ -55,8 +55,10 @@
         </form>
 
         <div class="flex items-center justify-center mt-4">
-            <p class="text-sm text-gray-600">Already registered? Redirecting to login page...</p>
-        </div>
+        <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('sign_in') }}">
+                        {{ __('Login instead') }}
+                    </a>        
+                </div>
     </x-authentication-card>
 
     <script>

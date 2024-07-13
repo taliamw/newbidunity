@@ -58,8 +58,8 @@
                 <div class="form-group">
                     <label for="bid_type">Bid Type:</label>
                     <select name="bid_type" class="form-control" id="bid_type" required>
-                        <option value="individual">Individual</option>
                         <option value="team">Team</option>
+                        <option value="individual">Individual  ------------(must be in current team with only you as member)</option>
                     </select>
                 </div>
                 <button type="submit" class="btn btn-primary" style="background-color: #007bff; border-color: #007bff;">Place Bid</button>
@@ -67,6 +67,12 @@
             @else
             <div class="alert alert-warning mt-3">Auction has ended. No more bids can be placed.</div>
             @endif
+
+            {{-- Display Success Message --}}
+@if(session('success'))
+    <div class="alert alert-success mt-3">{{ session('success') }}</div>
+@endif
+
 
             {{-- Display Error Message --}}
             @if(session('error'))
@@ -78,16 +84,22 @@
             {{-- Display User Bids --}}
 <h4 class="my-3">Bids</h4>
 <ul class="list-group">
-    @foreach($userBids as $userId => $totalAmount)
+    @foreach($userBids as $bid)
         @php
-            $user = $users->firstWhere('id', $userId);
+            $user = $users->firstWhere('id', $bid->user_id);
+            $team = $teams->firstWhere('id', $bid->team_id);
         @endphp
         @if($user)
             <li class="list-group-item d-flex justify-content-between align-items-center">
-                <span>{{ $user->name }}</span>
-                <span>Ksh{{ number_format($totalAmount, 2) }}</span>
+                <span>
+                    {{ $user->name }}
+                    @if($team)
+                        ({{ $team->name }})
+                    @endif
+                </span>
+                <span>Ksh{{ number_format($bid->total_amount, 2) }}</span>
                 @auth
-                @if(auth()->user()->id === $user->id)
+                    @if(auth()->user()->id === $user->id)
                         <a href="{{ route('products.bids_show', ['user' => $user->id]) }}" class="btn btn-sm btn-primary">View Bids</a>
                     @endif
                 @endauth
@@ -95,6 +107,7 @@
         @endif
     @endforeach
 </ul>
+
         </div>
     </div>
 </div>
