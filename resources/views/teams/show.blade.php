@@ -2,7 +2,7 @@
 <x-guest-layout>
     <x-authentication-card>
         <x-slot name="logo">
-            <x-authentication-card-logo />
+            <x-custom-logo />
         </x-slot>
 
         <div class="mb-4">
@@ -84,7 +84,7 @@
                     <input type="hidden" name="team_id" value="{{ $team->id }}">
                     <div class="form-group mb-4">
                         <label for="amount" class="block text-sm font-medium text-gray-700">Contribution Amount</label>
-                        <input type="number" step="0.01" name="amount" id="amount" class="mt-1 block w-full">
+                        <input type="number" step="0.01" name="amount" id="amount" maxlength= "12" class="mt-1 block w-full">
                     </div>
                     <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
                         Contribute

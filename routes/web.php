@@ -57,7 +57,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/test', function () {
         return 'Route is working';
     });
-    Route::get('/payment', [PaymentController::class, 'showPaymentForm'])->name('payment');
     Route::post('/handle-payment', [PaymentController::class, 'handlePayment'])->name('payment.handle');
 
     Route::middleware('can:admin')->group(function () {
@@ -72,6 +71,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 });
 
 //public routes
+Route::get('/payment', [PaymentController::class, 'showPaymentForm'])->name('payment');
+
 Route::get('/', function () {
     return view('home');
     })->name('home');

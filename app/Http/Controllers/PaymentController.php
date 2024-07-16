@@ -9,6 +9,7 @@ use Stripe\Stripe;
 use Stripe\PaymentIntent;
 use Stripe\Exception\ApiErrorException;
 use App\Models\Payment;
+use App\Models\Team;
 
 class PaymentController extends Controller
 {
@@ -23,26 +24,33 @@ class PaymentController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function showPaymentForm(Request $request)
-    {
-        $amount = intval($request->input('amount') * 100);
+   // In PaymentController
+public function showPaymentForm(Request $request, Team $team)
+{
+    \Log::info('showPaymentForm called', $request->all());
 
-        try {
-            // Create a PaymentIntent for immediate payment
-            $intent = PaymentIntent::create([
-                'amount' => $amount,
-                'currency' => 'usd',
-                'payment_method_types' => ['card'],
-            ]);
+    $amount = intval($request->input('amount') * 100);
 
-            return view('payment', [
-                'clientSecret' => $intent->client_secret,
-                'amount' => $request->input('amount'),
-            ]);
-        } catch (ApiErrorException $e) {
-            return back()->withErrors(['error' => $e->getMessage()]);
-        }       
+    try {
+        // Create a PaymentIntent for immediate payment
+        $intent = PaymentIntent::create([
+            'amount' => $amount,
+            'currency' => 'usd',
+            'payment_method_types' => ['card'],
+        ]);
+
+        \Log::info('PaymentIntent created', ['clientSecret' => $intent->client_secret, 'amount' => $request->input('amount')]);
+
+        return view('payment', [
+            'clientSecret' => $intent->client_secret,
+            'amount' => $request->input('amount'),
+            'team' => $team,
+        ]);
+    } catch (ApiErrorException $e) {
+        \Log::error('Stripe API error: ' . $e->getMessage());
+        return redirect()->back()->withErrors(['error' => $e->getMessage()]);
     }
+}
 
     /**
      * Handle the payment form submission.
@@ -75,7 +83,7 @@ class PaymentController extends Controller
 
             $payment->save();
 
-            return redirect()->route('allocation.report.pdf',);
+            return redirect()->route('allocation.report.pdf', ['team' => $teamId]);
             
         } catch (ApiErrorException $e) {
             Log::error('Error confirming PaymentIntent: ' . $e->getMessage());

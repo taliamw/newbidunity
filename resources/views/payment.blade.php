@@ -16,6 +16,11 @@
             </div>
 
             <div class="mt-4">
+                <x-label for="amount" value="{{ __('Amount') }}" />
+                <p id="amount" class="block mt-1 w-full bg-gray-100 p-2 rounded">Ksh {{ $amount }}</p>
+            </div>
+
+            <div class="mt-4">
                 <x-label for="card-element" value="{{ __('Credit or Debit Card') }}" /><br>
                 <div id="card-element" class="block mt-1 w-full"></div>
                 <div id="card-errors" class="mt-2 text-sm text-red-600"></div><br>
@@ -64,7 +69,7 @@
                 } else {
                     console.log('Payment confirmed successfully:', paymentIntent);
                     alert('Payment successful!');
-                    window.location.href = '{{ route('dashboard') }}'; // Redirect to dashboard after successful payment
+                    window.location.href = `/allocation/report/1`;
                 }
             };
 

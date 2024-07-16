@@ -242,25 +242,4 @@ if ($amount <= $product->current_price) {
             return back()->with('error', 'Failed to create product.');
         }
     }
-
-    public function placeBidFromEmail(Request $request, NewProduct $product)
-    {
-        // Validate the signed URL
-        if (!$request->hasValidSignature()) {
-            abort(403, 'Unauthorized action.');
-        }
-
-// Redirect to the product show page if the auction is not active or has ended
-if (!$product->isAuctionActive()) {
-    return redirect()->route('products.show', $product)->with('error', 'Auction is not active.');
-}
-
-// Redirect to the product show page if the user is not logged in
-if (!auth()->check()) {
-    return redirect()->route('products.show', $product)->with('error', 'You need to log in to place a bid.');
-}
-
-// Place the bid using the existing placeBid logic
-return $this->placeBid($request, $product);
-    }
 }

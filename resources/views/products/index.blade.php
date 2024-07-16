@@ -126,12 +126,12 @@
         </div>
         <div class="form-group">
             <label for="price">Price</label>
-            <input type="number" name="price" class="form-control" id="price" step="0.01" maxlength= "12" required>
+            <input type="number" name="price" class="form-control" id="price" step="0.01" maxlength= "6" required>
         </div>
         <script>
         // Optional: You can use JavaScript to further restrict input to numbers only
         document.getElementById('price').addEventListener('input', function() {
-            this.value = this.value.replace(/\D/g, '').slice(0, 12); // Allow only digits and limit to 12 characters
+            this.value = this.value.replace(/\D/g, '').slice(0, 6); // Allow only digits and limit to 6 characters
         });
     </script>
         <div class="form-group">

@@ -36,7 +36,7 @@
             <h1 class="text-2xl font-bold">Create a Team</h1>
         </div>
         <x-slot name="logo">
-            <x-authentication-card-logo />
+            <x-custom-logo />
         </x-slot>
 
         <x-validation-errors class="mb-4" />
